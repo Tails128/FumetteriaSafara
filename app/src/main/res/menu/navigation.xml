@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_black_24dp"
+        android:title="@string/menu_home" />
+
+    <item
+        android:id="@+id/navigation_abbonamenti"
+        android:icon="@drawable/ic_book_black_24dp"
+        android:title="@string/menu_abbonamenti" />
+
+    <item
+        android:id="@+id/navigation_tornei"
+        android:icon="@drawable/ic_trophy_black_24dp"
+        android:title="@string/menu_tornei" />
+
+    <item
+        android:id="@+id/navigation_opzioni"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/menu_opzioni" />
+
+</menu>
