@@ -23,9 +23,9 @@ principles to it.
 
 ## Known problems
 Here's a list of the known problems which will be solved soon
-⋅⋅* overall graphics
-⋅⋅* classic login / classic register 's graphics
-⋅⋅* absence of loading animations (except classic register and facebook's login)
+- overall graphics
+- classic login / classic register 's graphics
+- absence of loading animations (except classic register and facebook's login)
 
 ## Constructive critics
 Constructive critics are very welcome! No matter if this is a free side-project,
