@@ -1,5 +1,5 @@
 # FumetteriaSafara
-### An app by Filippo Defendi
+#### An app by Filippo Defendi
 
 ## About the app:
 FumetteriaSafara is an app developed free of charge for the comic store Safarà,
