@@ -64,7 +64,7 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_tornei);
+        setContentView(R.layout.activity_tournaments);
 
         if(getIntent().getExtras() == null){
             Toast.makeText(getBaseContext(),"Non sono stati passati dati relativi al gioco o al campionato",Toast.LENGTH_SHORT).show();

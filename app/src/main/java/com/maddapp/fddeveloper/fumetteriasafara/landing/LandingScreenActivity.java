@@ -52,7 +52,7 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loading_screen);
+        setContentView(R.layout.activity_landing_screen);
 
         //firebase initialization
 
