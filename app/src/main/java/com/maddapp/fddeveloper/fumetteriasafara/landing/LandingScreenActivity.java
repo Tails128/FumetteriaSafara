@@ -1,12 +1,13 @@
 package com.maddapp.fddeveloper.fumetteriasafara.landing;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -20,7 +21,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -30,8 +30,13 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.crash.FirebaseCrash;
 import com.maddapp.fddeveloper.fumetteriasafara.main.MainActivity;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A Landing screen: it contains three types of login:
@@ -46,6 +51,10 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     private FirebaseAuth mAuth;
     private CallbackManager mCallbackManager;
     private GoogleApiClient mGoogleApiClient;
+    private View mLoginFormView;
+    private View mProgressView;
+    private List<Integer> ignoredGoogleApiMessages = new ArrayList<Integer>(){{add(ConnectionResult.CANCELED); add(ConnectionResult.SIGN_IN_FAILED); add(ConnectionResult.SUCCESS);}};
+
     private static final int GOOGLE_SIGN_IN = 9001;
     private static final int FACEBOOK_SIGN_IN = 0xFACE;     // ... well played, fb.
 
@@ -53,6 +62,11 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing_screen);
+
+        //data for loading animation
+
+        mLoginFormView = findViewById(R.id.loginMethods);
+        mProgressView = findViewById(R.id.login_progress);
 
         //firebase initialization
 
@@ -78,18 +92,19 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     public void onStart(){
         super.onStart();
 
+        //no need for action bar
+
         if(getSupportActionBar()!= null)
             getSupportActionBar().hide();
+
+        //if the user's logged, go to main activity
 
         FirebaseUser usr = mAuth.getCurrentUser();
         if(usr != null){
             handleLoggedUser();
         }
 
-        mGoogleApiClient.connect();
-
-        TextView tw = findViewById(R.id.button2);
-        tw.setOnClickListener(new View.OnClickListener(){
+        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -99,8 +114,8 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
 
         //google login
 
-        SignInButton sib = findViewById(R.id.googleSignIn);
-        sib.setOnClickListener(new View.OnClickListener() {
+        mGoogleApiClient.connect();
+        findViewById(R.id.googleSignIn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -120,25 +135,32 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
 
             @Override
             public void onCancel() {
-                //todo
+                //cancel's allowed without consequences
             }
 
             @Override
             public void onError(FacebookException error) {
-                //todo
+                //send a report to firebase and notice the user
+                FirebaseCrash.report(new Exception("FB ERROR: " + error.getMessage()));
+                Toast.makeText(getBaseContext(),"Errore nel login di facebook",Toast.LENGTH_SHORT).show();
             }
         });
 
-        //todo: twitter login
+        //todo: twitter login ?
     }
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult){
-        Log.d("Register","Register Fail" + connectionResult);
+        //On connection failed, if the error is not in the ignored generic messages send firebase crash and notify
+        if(! ignoredGoogleApiMessages.contains(connectionResult.getErrorCode())) {
+            FirebaseCrash.report(new Exception("Google api error: " + connectionResult.getErrorMessage()));
+            Toast.makeText(getBaseContext(),"Errore nel login di google: " + connectionResult.getErrorMessage(), Toast.LENGTH_SHORT);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+        //on external login success handle via handlelogin functions
         if(requestCode == GOOGLE_SIGN_IN){
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             handleGoogleSignInResult(result);
@@ -149,6 +171,7 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void handleGoogleSignInResult(GoogleSignInResult result){
+        //get result if success, pass it to login
         if(result.isSuccess()){
             GoogleSignInAccount acct = result.getSignInAccount();
             firebaseAuthWithGoogle(acct);
@@ -156,40 +179,31 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
+        //get token, pass it
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful())
-                        {
-                            //todo
-                            Log.d("google-login","loggato");
-                            handleLoggedUser();
-                        }
-                        else
-                        {
-                            //todo
-                            Log.d("google-login","NON loggato");
-                        }
-                    }
-                });
+        handleLoginWithCredential(credential);
     }
 
     private void handleFacebookAccessToken(AccessToken token) {
+        //get token, pass it
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
+        handleLoginWithCredential(credential);
+    }
+
+    private void handleLoginWithCredential(AuthCredential credential){
+        //set login animation, log via token
+        LoadingAnimation(true);
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("Facebook-login", "signInWithCredential:success");
+                            // Sign in success, get user, handle the login
                             FirebaseUser user = mAuth.getCurrentUser();
                             handleLoggedUser();
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("Facebook-login", "signInWithCredential:failure", task.getException());
+                            // Sign in fail, remove loading animation, notice the user
+                            LoadingAnimation(false);
                             Toast.makeText(LandingScreenActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -198,17 +212,33 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
     }
 
     private void handleLoggedUser(){
+        //start new root activity and close this one
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         this.finish();
     }
 
-    private void handleFailedLogin(){
-        //todo
-    }
+    private void LoadingAnimation(final boolean show){
+        //simple loading animation, eventually will be updated with the graphics update.
+        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-    private void restoreLoadingScreen(){
-        //todo
+        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+        mProgressView.animate().setDuration(shortAnimTime).alpha(
+                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            }
+        });
     }
 }

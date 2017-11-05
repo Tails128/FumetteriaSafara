@@ -18,6 +18,23 @@
         android:contentDescription="@string/safara_logo_description"
     />
 
+    <ProgressBar
+        android:id="@+id/login_progress"
+        android:background="@drawable/progress_circular"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:indeterminateDrawable="@drawable/progress_circular"
+        android:visibility="gone"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/logo"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,19 +42,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/logo"
         >
-
-        <!-- Login progress -->
-    <ProgressBar
-        android:id="@+id/login_progress"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/login_form"
