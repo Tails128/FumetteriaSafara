@@ -3,7 +3,10 @@
 > Please notice that since the app is restricted for a limited set of users, it will always be in an endless beta
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 
-### 1.4 Endless Beta (Current one, not published yet)
+### 1.5 Endless Beta
+- Now firecrash are sent only if the message is not empty. They are also more compact
+
+### 1.4 Endless Beta
 - Code cleanup
 - Stability fixes
 - Added custom crash reports to simplify the code maintenance
