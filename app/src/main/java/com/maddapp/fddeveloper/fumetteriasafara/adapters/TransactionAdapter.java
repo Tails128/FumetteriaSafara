@@ -12,6 +12,11 @@ import android.widget.TwoLineListItem;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.Transaction;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 /**
  * List adapter for the transaction entity
  */
@@ -39,8 +44,10 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
         TextView t1 = tll.getText1();
         TextView t2 = tll.getText2();
         t1.setText(Items[position].Descrizione);
-        String string2 = "%1$,.2f € | " + Items[position].Data;
-        string2 = String.format(string2,Items[position].Valore);
+        Date date = new Date(Items[position].Data);
+        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ITALIAN);
+        String string2 = "%1$,.2f € | " + df.format(date);
+        string2 = String.format(string2,Items[position].Valore, date);
         t2.setText(string2);
 
 

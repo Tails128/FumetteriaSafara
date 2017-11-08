@@ -8,7 +8,7 @@ import com.google.firebase.database.IgnoreExtraProperties;
 
 @IgnoreExtraProperties
 public class Transaction {
-    public String Data;             //Date
+    public long Data;             //Date
     public String Descrizione;      //Description
     public Double Valore;           //Amount
 }

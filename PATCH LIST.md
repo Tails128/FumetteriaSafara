@@ -5,6 +5,7 @@
 
 ### 1.5 Endless Beta
 - Now firecrash are sent only if the message is not empty. They are also more compact
+- Transactions now use longs instead of strings, this is made mainly for sorting and date conversion
 
 ### 1.4 Endless Beta
 - Code cleanup
