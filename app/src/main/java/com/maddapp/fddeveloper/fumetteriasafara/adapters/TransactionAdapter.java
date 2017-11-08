@@ -44,12 +44,14 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
         TextView t1 = tll.getText1();
         TextView t2 = tll.getText2();
         t1.setText(Items[position].Descrizione);
-        Date date = new Date(Items[position].Data);
-        DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ITALIAN);
-        String string2 = "%1$,.2f € | " + df.format(date);
-        string2 = String.format(string2,Items[position].Valore, date);
+        String string2 = "%1$,.2f € | ";
+        if(Items[position].Data != 0){
+            Date date = new Date(Items[position].Data);
+            DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ITALIAN);
+            string2 +=  df.format(date);
+        }
+        string2 = String.format(string2,Items[position].Valore);
         t2.setText(string2);
-
 
 
 /*        Transaction current = getItem(position);
