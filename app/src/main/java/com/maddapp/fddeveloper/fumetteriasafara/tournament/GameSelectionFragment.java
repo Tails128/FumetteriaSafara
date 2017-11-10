@@ -43,7 +43,7 @@ public class GameSelectionFragment extends Fragment {
         magicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getString(R.string.Magic));
+                mListener.onFragmentGameInteraction(getContext().getString(R.string.Magic));
             }
         });
 
@@ -51,7 +51,7 @@ public class GameSelectionFragment extends Fragment {
         fowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getString(R.string.FOW));
+                mListener.onFragmentGameInteraction(getContext().getString(R.string.FOW));
             }
         });
 
@@ -59,7 +59,7 @@ public class GameSelectionFragment extends Fragment {
         yugiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getString(R.string.Yugi));
+                mListener.onFragmentGameInteraction(getContext().getString(R.string.Yugi));
             }
         });
 
@@ -67,7 +67,7 @@ public class GameSelectionFragment extends Fragment {
         pokeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getString(R.string.Pokemon));
+                mListener.onFragmentGameInteraction(getContext().getString(R.string.Pokemon));
             }
         });
 
