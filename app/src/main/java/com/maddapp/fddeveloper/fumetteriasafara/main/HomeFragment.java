@@ -39,10 +39,8 @@ public class HomeFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static HomeFragment newInstance(String param1, String param2) {
+    public static HomeFragment newInstance() {
         HomeFragment fragment = new HomeFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
@@ -59,7 +57,7 @@ public class HomeFragment extends Fragment {
                 Double val = dataSnapshot.getValue(Double.class);
                 if(val == null)
                     val = 0d;
-                String toFormat = getString(R.string.punti_torneo) + " %1$,.2f €";
+                String toFormat = getContext().getString(R.string.punti_torneo) + " %1$,.2f €";
                 String text = String.format(toFormat,val);
                 tournamentButton.setText(text);
             }
