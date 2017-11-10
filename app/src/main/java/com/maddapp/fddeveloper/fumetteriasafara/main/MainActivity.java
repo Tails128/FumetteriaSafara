@@ -166,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     }
 
     public  void makeLog(String text){
-        if(text == null || text.trim() == "")
+        if(text == null || text.trim().equals(""))
             return;
         String message = String.format("Message: %s",text);
         FirebaseCrash.report(new Exception(message));
