@@ -3,6 +3,10 @@
 > Please notice that since the app is restricted for a limited set of users, it will always be in an endless beta
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 
+### 1.6 Endless Beta
+- Bugfix for possible getresources getstring error in fragments
+- Bugfix for a == string comparison
+
 ### 1.5 Endless Beta
 - Now firecrash are sent only if the message is not empty. They are also more compact
 - Transactions now use longs instead of strings, this is made mainly for sorting and date conversion

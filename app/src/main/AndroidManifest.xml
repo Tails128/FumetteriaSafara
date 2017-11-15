@@ -20,7 +20,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
 
-        <activity android:name=".landing.LandingScreenActivity">
+        <activity android:name=".landing.LandingScreenActivity"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,20 +32,41 @@
         </activity>
         <activity
             android:name=".main.MainActivity"
-            android:label="@string/title_activity_main" />
+            android:label="@string/title_activity_main"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
         <activity
             android:name=".landing.ClassicRegisterActivity"
-            android:label="@string/title_activity_classic_login" />
+            android:label="@string/title_activity_classic_login"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
         <activity
             android:name=".landing.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
         <activity
             android:name=".tournament.ChampionshipActivity"
             android:label="@string/title_activity_tornei"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".tournament.FormatLadderActivity" />
-        <activity android:name=".tournament.TournamentLadderActivity" />
-        <activity android:name=".main.TransactionRecapActivity" />
+            android:theme="@style/AppTheme.NoActionBar"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
+        <activity android:name=".tournament.FormatLadderActivity"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
+        <activity android:name=".tournament.TournamentLadderActivity"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
+        <activity android:name=".main.TransactionRecapActivity"
+            android:configChanges = "orientation"
+            android:screenOrientation = "portrait"
+            />
     </application>
 
 </manifest>

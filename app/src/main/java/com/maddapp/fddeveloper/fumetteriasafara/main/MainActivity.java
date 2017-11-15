@@ -1,7 +1,6 @@
 package com.maddapp.fddeveloper.fumetteriasafara.main;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -34,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
                                                                 SettingsFragment.OnFragmentInteractionListener,
                                                                 ChampionshipSelectionFragment.OnFragmentInteractionListener,
                                                                 HomeFragment.OnFragmentInteractionListener,
-                                                                BookingFragment.OnFragmentInteractionListener {
+                                                                BookingFragment.OnListFragmentInteractionListener {
     private FirebaseAuth mAuth;
     private FirebaseUser User;
     private GoogleApiClient mGoogleApiClient;
