@@ -1,23 +1,31 @@
 package com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions;
 
-/**
- * Created by tails on 15/11/2017.
- */
+import java.util.Locale;
 
+/**
+ * Booking class,
+ * made to keep track of the bookings for books's series.
+ * it includes the comic name, the comic id, the current number for the user and a the state of the confirmation.
+ * Users can request bookings and the shopkeeper can accept or delete them.
+ */
 public class Booking {
     private String id;
     private String ComicName;
     private int Number;
+    private boolean isConfirmed;
 
     public Booking(){
         ComicName ="";
         Number = -1;
+        id = "";
+        isConfirmed = false;
     }
 
-    public Booking(String id, String comicName, int number){
+    public Booking(String id, String ComicName, int Number, boolean isConfirmed){
         this.id = id;
-        ComicName = comicName;
-        Number = number;
+        this.ComicName = ComicName;
+        this.Number = Number;
+        this.isConfirmed = isConfirmed;
     }
 
     public String getId(){
@@ -38,6 +46,6 @@ public class Booking {
 
     @Override
     public String toString() {
-        return String.format("%s %d",ComicName, Number);
+        return String.format(Locale.ITALIAN,"%s %d",ComicName, Number);
     }
 }
