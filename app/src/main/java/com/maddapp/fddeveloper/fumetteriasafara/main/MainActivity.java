@@ -39,10 +39,11 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     private GoogleApiClient mGoogleApiClient;
     private LoginManager mLoginManager;
     final FragmentManager fm = getSupportFragmentManager();
-    private final HomeFragment homeFragment = new HomeFragment();
-    private final BookingFragment abbonamentiFragment = new BookingFragment();
-    private final GameSelectionFragment gameSelectionFragment = new GameSelectionFragment();
-    private final SettingsFragment optionFragment = new SettingsFragment();
+    //TODO: use new instance to pass context
+    private final HomeFragment homeFragment = HomeFragment.newInstance();
+    private final BookingFragment abbonamentiFragment = BookingFragment.newInstance();
+    private final GameSelectionFragment gameSelectionFragment = GameSelectionFragment.newInstance();
+    private final SettingsFragment optionFragment = SettingsFragment.newInstance();
     private ChampionshipSelectionFragment championshipFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -50,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            //TODO: animation time
             FragmentTransaction f = fm.beginTransaction();
             f.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
             switch (item.getItemId()) {
