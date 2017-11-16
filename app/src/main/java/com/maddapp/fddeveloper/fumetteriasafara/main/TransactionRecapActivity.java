@@ -55,7 +55,6 @@ public class TransactionRecapActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO
             }
         });
     }

@@ -106,7 +106,6 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
         mfragmentFormati = FragmentFormatSelection.newInstance();
         mfragmentGiocatori = FragmentPlayerLadder.newInstance();
 
-        //TODO: lista utenti?
         String query = String.format("%s/Tornei/%s",gioco,id);
         reference.child(query).addValueEventListener(new ValueEventListener() {
             @Override
@@ -140,7 +139,6 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO
             }
         });
     }
@@ -213,7 +211,6 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
         startActivity(intent);
     }
     public void onClassificaGiocatoreInteraction(Object item){
-        //TODO ?
     }
 
 }

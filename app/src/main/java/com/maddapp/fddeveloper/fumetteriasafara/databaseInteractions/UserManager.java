@@ -36,7 +36,6 @@ public class UserManager {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO
             }
         });
     }

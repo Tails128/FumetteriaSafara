@@ -57,7 +57,7 @@ public class TournamentLadderActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 ListView mlist = findViewById(R.id.simple_list);
                 TournamentPosition mPos = (TournamentPosition) mlist.getAdapter().getItem(i);
-                malertdialog.setTitle(mPos.toString())//TODO
+                malertdialog.setTitle(mPos.toString())
                         .setMessage(mPos.toDetailString())
                         .setNeutralButton(R.string.Chiudi, new DialogInterface.OnClickListener() {
                             @Override

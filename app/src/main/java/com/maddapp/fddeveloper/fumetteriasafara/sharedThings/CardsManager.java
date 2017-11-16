@@ -34,7 +34,6 @@ public class CardsManager {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    //TODO
                 }
             });
         }
