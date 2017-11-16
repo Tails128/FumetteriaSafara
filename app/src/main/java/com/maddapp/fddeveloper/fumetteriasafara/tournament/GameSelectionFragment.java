@@ -18,17 +18,17 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 public class GameSelectionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
+    private Context context;
 
     public GameSelectionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @return A new instance of fragment GameSelectionFragment.
-     */
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        context = getActivity();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -43,7 +43,7 @@ public class GameSelectionFragment extends Fragment {
         magicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getContext().getString(R.string.Magic));
+                mListener.onFragmentGameInteraction(context.getString(R.string.Magic));
             }
         });
 
@@ -51,7 +51,7 @@ public class GameSelectionFragment extends Fragment {
         fowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getContext().getString(R.string.FOW));
+                mListener.onFragmentGameInteraction(context.getString(R.string.FOW));
             }
         });
 
@@ -59,7 +59,7 @@ public class GameSelectionFragment extends Fragment {
         yugiButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getContext().getString(R.string.Yugi));
+                mListener.onFragmentGameInteraction(context.getString(R.string.Yugi));
             }
         });
 
@@ -67,7 +67,7 @@ public class GameSelectionFragment extends Fragment {
         pokeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onFragmentGameInteraction(getContext().getString(R.string.Pokemon));
+                mListener.onFragmentGameInteraction(context.getString(R.string.Pokemon));
             }
         });
 
