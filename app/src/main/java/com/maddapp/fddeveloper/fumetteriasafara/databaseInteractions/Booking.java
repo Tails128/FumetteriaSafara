@@ -12,20 +12,20 @@ public class Booking {
     private String id;
     private String ComicName;
     private int Number;
-    private boolean isConfirmed;
+    private boolean Confirmed;
 
     public Booking(){
         ComicName ="";
         Number = -1;
         id = "";
-        isConfirmed = false;
+        Confirmed = false;
     }
 
     public Booking(String id, String ComicName, int Number, boolean isConfirmed){
         this.id = id;
         this.ComicName = ComicName;
         this.Number = Number;
-        this.isConfirmed = isConfirmed;
+        this.Confirmed = isConfirmed;
     }
 
     public String getId(){
@@ -37,15 +37,22 @@ public class Booking {
     }
 
     public String getComicName(){
-        return ComicName;
+        return (ComicName == null || ComicName.equals(""))? "Contenuto non trovato" : ComicName;
     }
 
     public int getNumber(){
         return Number;
     }
 
+    public void setNumber(int Number){
+        this.Number = Number;
+    }
     @Override
     public String toString() {
-        return String.format(Locale.ITALIAN,"%s %d",ComicName, Number);
+        return String.format(Locale.ITALIAN,"%s: Numero %d",getComicName(), Number);
+    }
+
+    public boolean isConfirmed(){
+        return Confirmed;
     }
 }
