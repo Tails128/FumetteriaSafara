@@ -53,8 +53,7 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
                 holder.mImage.setColorFilter(ContextCompat.getColor(mContext, R.color.bronze));
                 break;
             default:
-                //TODO: non sta togliendo il trofeo
-                holder.mImage.setColorFilter(null);
+                holder.mImage.setColorFilter(ContextCompat.getColor(mContext, android.R.color.white));
                 break;
         }
 
