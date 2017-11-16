@@ -79,5 +79,17 @@
     <string name="points_icon_description">A symbol for points</string>
     <string name="safara_logo_description">A symbol for points</string>
 
+    <string name="book_modal_title">Scegli la serie da prenotare</string>
+    <string name="dialog_numero_fumetto">Numero di parteza</string>
+
+    <string name="cancel_comic_ita">Cancella</string>
+    <string name="confirm_comic_ita">Prenota</string>
+
+    <string name="error_comic_number">Inserisci un numero intero positivo per richiedere la prenotazione</string>
+    <string name="error_comic_spinner">Non hai selezionato nessun fumetto!</string>
+    <string name="error_comic_no_available_comic">Nessun titolo trovato.</string>
+    <string name="success_comic_booking">Richiesta inviata con successo!</string>
+
     <string name="dummy">dummy</string>
+
 </resources>

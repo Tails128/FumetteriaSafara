@@ -3,6 +3,10 @@
 > Please notice that since the app is restricted for a limited set of users, it will always be in an endless beta
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 
+### 2.0 Endless beta
+- Added support for bookings management
+- Solved (again...) a problem with context
+
 ### 1.6 Endless Beta
 - Bugfix for possible getresources getstring error in fragments
 - Bugfix for a == string comparison
