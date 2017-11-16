@@ -191,9 +191,9 @@ public class BookingFragment extends Fragment {
             i++;
             if(b.getId().equals(key) && b.isConfirmed() == confirmed)
                 break;
-            items.remove(i);
-            setList(items);
         }
+        items.remove(i);
+        setList(items);
     }
 
     public void setList(List<Booking> items){
