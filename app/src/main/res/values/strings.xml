@@ -48,9 +48,6 @@
     <string name="logout_button">Logout</string>
     <string name="segnala_bug_hint">Segnala un problema</string>
 
-    <!-- TODO: Remove this placeholder text -->
-    <string name="hello_blank_fragment">Lavori in corso, al momento solo la sezione "abbonamenti" non è funzionante</string>
-
     <string name="title_activity_classic_login">Sign in</string>
     <string name="Chiudi">Chiudi</string>
 
