@@ -34,6 +34,7 @@ public class HomeFragment extends Fragment {
     private static DatabaseReference reference = database.getReference();
     private FirebaseAuth mAuth;
     private FirebaseUser User;
+    private Context ctx;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -50,6 +51,8 @@ public class HomeFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        ctx = getActivity();
+
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser();
         String query = String.format("Transazioni/%s/Tornei/Somma", User.getUid());
@@ -59,14 +62,13 @@ public class HomeFragment extends Fragment {
                 Double val = dataSnapshot.getValue(Double.class);
                 if(val == null)
                     val = 0d;
-                String toFormat = getContext().getString(R.string.punti_torneo) + " %1$,.2f €";
+                String toFormat = ctx.getString(R.string.punti_torneo) + " %1$,.2f €";
                 String text = String.format(toFormat,val);
                 tournamentButton.setText(text);
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                //TODO
             }
         });
 
@@ -77,7 +79,7 @@ public class HomeFragment extends Fragment {
                 Double val = dataSnapshot.getValue(Double.class);
                 if(val == null)
                     val = 0d;
-                String toFormat = getString(R.string.punti_madda) + " %1$,.2f €";
+                String toFormat = ctx.getString(R.string.punti_madda) + " %1$,.2f €";
                 String text = String.format(toFormat,val);
                 maddaButton.setText(text);
             }
