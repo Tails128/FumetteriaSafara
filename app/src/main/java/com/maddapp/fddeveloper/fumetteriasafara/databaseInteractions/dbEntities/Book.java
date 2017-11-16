@@ -1,7 +1,7 @@
 package com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities;
 
 /**
- * Created by tails on 15/11/2017.
+ * Book entity
  */
 
 public class Book {
@@ -12,4 +12,6 @@ public class Book {
     public String getName(){
         return Nome;
     }
+
+
 }
