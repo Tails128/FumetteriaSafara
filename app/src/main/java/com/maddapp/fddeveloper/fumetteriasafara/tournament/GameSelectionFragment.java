@@ -24,6 +24,13 @@ public class GameSelectionFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public static GameSelectionFragment newInstance() {
+        GameSelectionFragment fragment = new GameSelectionFragment();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
