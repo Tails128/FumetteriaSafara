@@ -35,8 +35,9 @@ public class TransactionRecapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.simple_list_activity);
 
-        //todo: if not equal Transazioni or Tornei
         String mode = getIntent().getStringExtra("mode");
+        if(!mode.equals("Tornei") && !mode.equals("Transazioni"))
+            finish();
         transazioni = new ArrayList<>();
         mAuth = FirebaseAuth.getInstance();
         User = mAuth.getCurrentUser();
