@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -34,7 +35,7 @@ public class BookingFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
     private RecyclerView mrecyclerview;
-    private List<Booking> items;
+    private List<Booking> items = new ArrayList<>();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static DatabaseReference reference = database.getReference();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -44,58 +45,54 @@ public class BookingFragment extends Fragment {
      * fragment (e.g. upon screen orientation changes).
      */
     public BookingFragment() {
+        final List<Booking> result = new ArrayList<>();
         String query = String.format("Bookings/%s",mAuth.getCurrentUser().getUid());
-        reference.child(query).addValueEventListener(new ValueEventListener() {
+        final boolean regularBooking = true;
+        reference.child(query).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<Booking> result = new ArrayList<>();
-                for(final DataSnapshot booking : dataSnapshot.getChildren()){
-                    // read and add definitive bookings to our list
-                    DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
-                    nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Book b = dataSnapshot.getValue(Book.class);
-                            result.add(new Booking(booking.getKey(), b.Nome, booking.getValue(int.class), true));
-                            setList(result);
-                        }
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                childAdded(dataSnapshot, regularBooking);
+            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                childChanged(dataSnapshot, regularBooking);
+            }
 
-                        }
-                    });
-                }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                childRemoved(dataSnapshot.getKey(),regularBooking);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
             }
         });
 
+        final boolean temporaryBooking = false;
         query = String.format("TempBookings/%s",mAuth.getCurrentUser().getUid());
-        reference.child(query).addValueEventListener(new ValueEventListener() {
+        reference.child(query).addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                final List<Booking> result = new ArrayList<>();
-                for(final DataSnapshot booking : dataSnapshot.getChildren()){
-                    // read and add definitive bookings to our list
-                    DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
-                    nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            Book b = dataSnapshot.getValue(Book.class);
-                            result.add(new Booking(booking.getKey(), b.Nome, booking.getValue(int.class), true));
-                            setList(result);
-                        }
+            public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
+                childAdded(dataSnapshot, temporaryBooking);
+            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                childChanged(dataSnapshot, temporaryBooking);
+            }
 
-                        }
-                    });
-                }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                childRemoved(dataSnapshot.getKey(),temporaryBooking);
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
             }
 
             @Override
@@ -121,14 +118,21 @@ public class BookingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking_list, container, false);
 
+        View v = view.findViewById(R.id.list);
         // Set the adapter
-        if (view instanceof RecyclerView) {
+        if (v instanceof RecyclerView) {
             Context context = view.getContext();
-            mrecyclerview = (RecyclerView) view;
+            mrecyclerview = (RecyclerView) v;
             mrecyclerview.setLayoutManager(new LinearLayoutManager(context));
             mrecyclerview.setAdapter(new BookingRecyclerViewAdapter(items, null));
             mrecyclerview.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         }
+        view.findViewById(R.id.FABBooking).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mListener.onAddBooking();
+            }
+        });
         return view;
     }
 
@@ -150,14 +154,55 @@ public class BookingFragment extends Fragment {
         mListener = null;
     }
 
+    public void childAdded(final DataSnapshot booking, final boolean confirmed){
+        DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
+        nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Book b = dataSnapshot.getValue(Book.class);
+                String title = "";
+                if(b!= null)
+                    title = b.getName();
+                items.add(new Booking(booking.getKey(), title, booking.getValue(int.class), confirmed));
+                setList(items);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public void childChanged(DataSnapshot dataSnapshot, boolean confirmed){
+        for(Booking b : items){
+            if(b.getId().equals(dataSnapshot.getKey()) && b.isConfirmed() == confirmed)
+            {
+                b.setNumber(dataSnapshot.getValue(int.class));
+                setList(items);
+                break;
+            }
+        }
+    }
+
+    public void childRemoved(String key, boolean confirmed){
+        int i = -1;
+        for(Booking b : items){
+            i++;
+            if(b.getId().equals(key) && b.isConfirmed() == confirmed)
+                break;
+            items.remove(i);
+            setList(items);
+        }
+    }
+
     public void setList(List<Booking> items){
         if(mrecyclerview!= null)
             mrecyclerview.setAdapter(new BookingRecyclerViewAdapter(items,null));
         this.items = items;
     }
 
-    //TODO: Add booking
     public interface OnListFragmentInteractionListener {
-        void onBookingFragmentInteraction();
+        void onAddBooking();
     }
 }
