@@ -1,13 +1,21 @@
 package com.maddapp.fddeveloper.fumetteriasafara.main;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
@@ -18,13 +26,25 @@ import com.google.android.gms.common.api.Status;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.Booking;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.UserManager;
+import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.Book;
 import com.maddapp.fddeveloper.fumetteriasafara.landing.LandingScreenActivity;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.sharedThings.CardsManager;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipSelectionFragment;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.GameSelectionFragment;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipActivity;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * The main activity of the app: after logging in this activity works as a hub
@@ -39,11 +59,11 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     private GoogleApiClient mGoogleApiClient;
     private LoginManager mLoginManager;
     final FragmentManager fm = getSupportFragmentManager();
-    //TODO: use new instance to pass context
     private final HomeFragment homeFragment = HomeFragment.newInstance();
     private final BookingFragment abbonamentiFragment = BookingFragment.newInstance();
     private final GameSelectionFragment gameSelectionFragment = GameSelectionFragment.newInstance();
     private final SettingsFragment optionFragment = SettingsFragment.newInstance();
+    private final FragmentAddBooking fragmentAddBooking = FragmentAddBooking.newInstance();
     private ChampionshipSelectionFragment championshipFragment;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -174,7 +194,8 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     }
 
     @Override
-    public void onBookingFragmentInteraction() {
-        //TODO
+    public void onAddBooking() {
+        fragmentAddBooking.show(getSupportFragmentManager(),"addBooking");
     }
+
 }
