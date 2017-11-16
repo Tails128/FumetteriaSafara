@@ -50,12 +50,13 @@ public class BookingFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 final List<Booking> result = new ArrayList<>();
                 for(final DataSnapshot booking : dataSnapshot.getChildren()){
+                    // read and add definitive bookings to our list
                     DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
                     nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot dataSnapshot) {
                             Book b = dataSnapshot.getValue(Book.class);
-                            result.add(new Booking(booking.getKey(), b.Nome, booking.getValue(int.class)));
+                            result.add(new Booking(booking.getKey(), b.Nome, booking.getValue(int.class), true));
                             setList(result);
                         }
 
@@ -64,6 +65,7 @@ public class BookingFragment extends Fragment {
 
                         }
                     });
+                    //TODO: read temporary bookings
                 }
             }
 
