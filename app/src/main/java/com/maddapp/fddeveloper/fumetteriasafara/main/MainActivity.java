@@ -71,7 +71,6 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            //TODO: animation time
             FragmentTransaction f = fm.beginTransaction();
             f.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             switch (item.getItemId()) {
