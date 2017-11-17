@@ -25,9 +25,13 @@ public class TournamentListAdapter extends ArrayAdapter<TournamentListViewItem> 
 
     @Override
     public @NonNull View getView(int position, View convertView, @NonNull ViewGroup parent){
-        //TODO: recycler view ?
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        View customView = inflater.inflate(R.layout.tournament_list_item_layout, parent, false);
+        View customView;
+        if(convertView == null){
+            customView = inflater.inflate(R.layout.tournament_list_item_layout, parent, false);
+        }
+        else
+            customView = convertView;
 
         TournamentListViewItem current = getItem(position);
         if(current != null)
