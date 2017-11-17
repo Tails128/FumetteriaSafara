@@ -60,7 +60,7 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mContentView = view.findViewById(R.id.content);
         }
 
         @Override

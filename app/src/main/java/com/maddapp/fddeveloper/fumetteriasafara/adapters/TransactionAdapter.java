@@ -13,7 +13,6 @@ import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -50,7 +49,7 @@ public class TransactionAdapter extends ArrayAdapter<Transaction> {
             DateFormat df = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.ITALIAN);
             string2 +=  df.format(date);
         }
-        string2 = String.format(string2,Items[position].Valore);
+        string2 = String.format(Locale.ITALIAN, string2,Items[position].Valore);
         t2.setText(string2);
 
 

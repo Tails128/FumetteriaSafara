@@ -19,7 +19,6 @@ import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 /**

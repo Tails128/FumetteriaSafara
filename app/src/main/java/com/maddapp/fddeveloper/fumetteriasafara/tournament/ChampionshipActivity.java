@@ -115,6 +115,8 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
                         formati.put(formato.getKey(),new HashMap<String, Tournament>());
                     for(DataSnapshot torneo : formato.getChildren()){
                         Tournament t = torneo.getValue(Tournament.class);                       //add tornei to map formati and map tornei
+                        if(t == null)
+                            t = new Tournament();
                         t.id = torneo.getKey();
                         formati.get(formato.getKey()).put(torneo.getKey(),t);
                         tornei.put(torneo.getKey(), t);

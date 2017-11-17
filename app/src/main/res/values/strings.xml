@@ -23,7 +23,6 @@
     <string name="register_alternative">puoi anche usare uno dei seguenti metodi:</string>
     <string name="email_hint">e-mail</string>
     <string name="password_hint">password</string>
-    <string name="register_button">Registrati</string>
     <string name="login_button">Accedi con mail e password</string>
     <string name="register_link">Non sei ancora registrato? Clicca qui!</string>
 

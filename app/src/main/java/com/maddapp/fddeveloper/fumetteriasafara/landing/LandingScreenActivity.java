@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -34,7 +33,6 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.maddapp.fddeveloper.fumetteriasafara.main.MainActivity;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -154,7 +152,7 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
         //On connection failed, if the error is not in the ignored generic messages send firebase crash and notify
         if(! ignoredGoogleApiMessages.contains(connectionResult.getErrorCode())) {
             FirebaseCrash.report(new Exception("Google api error: " + connectionResult.getErrorMessage()));
-            Toast.makeText(getBaseContext(),"Errore nel login di google: " + connectionResult.getErrorMessage(), Toast.LENGTH_SHORT);
+            Toast.makeText(getBaseContext(),"Errore nel login di google: " + connectionResult.getErrorMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
