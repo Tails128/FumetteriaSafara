@@ -6,6 +6,8 @@
 ### 2.0 Endless beta
 - Added support for bookings management
 - Solved (again...) a problem with context
+- Improved the mail register experience
+- improved animations
 
 ### 1.6 Endless Beta
 - Bugfix for possible getresources getstring error in fragments

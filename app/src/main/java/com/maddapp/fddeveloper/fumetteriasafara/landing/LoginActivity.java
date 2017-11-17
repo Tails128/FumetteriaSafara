@@ -18,14 +18,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.UserManager;
-import com.maddapp.fddeveloper.fumetteriasafara.main.SettingsFragment;
 
 /**
  * A login screen that offers login via email/password and also let the user access to a
  * register activity.
  */
 public class LoginActivity extends AppCompatActivity implements FragmentMailLogin.OnFragmentInteractionListener, FragmentMailRegister.OnFragmentInteractionListener {
-//TODO: autocomplete
 
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
