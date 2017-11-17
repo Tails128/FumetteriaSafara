@@ -1,41 +1,32 @@
 package com.maddapp.fddeveloper.fumetteriasafara.landing;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
-
-import android.content.CursorLoader;
-import android.content.Loader;
 import android.database.Cursor;
 import android.net.Uri;
-
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.UserManager;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.sharedThings.StringValidator;
 
@@ -44,44 +35,45 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
-/**
- * A register screen that offers login via email/password, it also requires name and surname
- * to initialize the user data.
- */
-public class ClassicRegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
-//TODO: autocomplete
+public class FragmentMailRegister extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
     private static final int REQUEST_READ_CONTACTS = 0;
 
-    /**
-     * Keep track of the login task to ensure we can cancel it if requested.
-     */
 
-    // UI references.
+    private OnFragmentInteractionListener mListener;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
     private EditText mName;
     private EditText mSurname;
-    private View mProgressView;
-    private View mLoginFormView;
-    private FirebaseAuth mAuth;
+    private Context ctx;
+
+    public FragmentMailRegister() {
+        // Required empty public constructor
+    }
+
+    public static FragmentMailRegister newInstance() {
+        FragmentMailRegister fragment = new FragmentMailRegister();
+        Bundle args = new Bundle();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_classic_register);
-        // Set up the login form.
-        mAuth= FirebaseAuth.getInstance();
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View view = inflater.inflate(R.layout.fragment_mail_register, container, false);
+        ctx= getActivity();
 
-        mEmailView = findViewById(R.id.email);
+        mEmailView = view.findViewById(R.id.email);
         populateAutoComplete();
 
-        mName = findViewById(R.id.name);
-        mSurname = findViewById(R.id.surname);
+        mName = view.findViewById(R.id.name);
+        mSurname = view.findViewById(R.id.surname);
 
-        mPasswordView = findViewById(R.id.password);
+        mPasswordView = view.findViewById(R.id.password);
 
         mSurname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -94,20 +86,37 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
             }
         });
 
-        Button mEmailSignInButton = findViewById(R.id.email_sign_in_button);
-        mEmailSignInButton.setOnClickListener(new OnClickListener() {
+        Button mEmailSignInButton = view.findViewById(R.id.email_sign_in_button);
+        mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 attemptLogin();
             }
         });
-
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
-
-        if(getSupportActionBar() != null)
-            getSupportActionBar().hide();
+        return  view;
     }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInteractionListener) {
+            mListener = (OnFragmentInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+    public interface OnFragmentInteractionListener {
+        void onForwardRegister(String mail, String password, String Name, String Surname);
+    }
+
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {
@@ -121,7 +130,7 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return true;
         }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(getActivity(),READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
@@ -151,7 +160,6 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
             }
         }
     }
-
 
     /**
      * Attempts to sign in or register the account specified by the login form.
@@ -214,65 +222,21 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
         } else {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
-            showProgress(true);
-
-
-            mAuth.createUserWithEmailAndPassword(email,password)
-                    .addOnCompleteListener(ClassicRegisterActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()) {
-                                FirebaseUser val = mAuth.getCurrentUser();
-                                UserManager.writeUser(name,surname, mAuth.getCurrentUser());
-                                finish();
-                            } else
-                            {
-                                showProgress(false);
-                                Toast.makeText(getApplicationContext(),task.getException().toString(),Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    })
-                    .addOnFailureListener(ClassicRegisterActivity.this, new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            showProgress(false);
-                            Toast.makeText(getApplicationContext(),e.getMessage(),Toast.LENGTH_SHORT).show();
-                        }
-                    })
-            ;
+            mListener.onForwardRegister(email,password,name,surname);
         }
     }
 
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    private void showProgress(final boolean show) {
-        int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
 
-        mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            }
-        });
 
-        mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-        mProgressView.animate().setDuration(shortAnimTime).alpha(
-                show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            }
-        });
-    }
 
-    //EMAIL AUTOCOMPLETE
+
+
+
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
-        return new CursorLoader(this,
+        return new CursorLoader(ctx,
                 // Retrieve data rows for the device user's 'profile' contact.
                 Uri.withAppendedPath(ContactsContract.Profile.CONTENT_URI,
                         ContactsContract.Contacts.Data.CONTENT_DIRECTORY), ProfileQuery.PROJECTION,
@@ -307,7 +271,7 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(ClassicRegisterActivity.this,
+                new ArrayAdapter<>(ctx,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
         mEmailView.setAdapter(adapter);
@@ -323,5 +287,6 @@ public class ClassicRegisterActivity extends AppCompatActivity implements Loader
         int IS_PRIMARY = 1;
     }
 
-}
 
+
+}
