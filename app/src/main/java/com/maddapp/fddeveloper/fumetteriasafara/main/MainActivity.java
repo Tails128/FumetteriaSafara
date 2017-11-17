@@ -143,10 +143,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     //Implementing GameSelectionFragment.OnFragmentInteraction
     @Override
     public void onFragmentGameInteraction(String destination) {
-        championshipFragment = new ChampionshipSelectionFragment();
-        Bundle args = new Bundle();
-        args.putString(ChampionshipSelectionFragment.ARG_PARAM1,destination);
-        championshipFragment.setArguments(args);
+        championshipFragment = ChampionshipSelectionFragment.newInstance(destination);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
         t.replace(R.id.content, championshipFragment);

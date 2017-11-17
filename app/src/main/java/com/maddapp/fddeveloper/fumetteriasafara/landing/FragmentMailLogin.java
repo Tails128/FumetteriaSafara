@@ -121,7 +121,6 @@ public class FragmentMailLogin extends Fragment implements LoaderManager.LoaderC
     }
 
     public interface OnFragmentInteractionListener {
-        //todo
         void forwardLogin(String email, String password);
         void requestMailRegister();
     }

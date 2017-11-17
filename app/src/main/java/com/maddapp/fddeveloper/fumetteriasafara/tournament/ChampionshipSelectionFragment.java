@@ -20,13 +20,14 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * A fragment for the selection of championships: a list of championships is displayed
  * and after one's clicked the onChampionshipSelection interaction's called.
  */
 public class ChampionshipSelectionFragment extends Fragment {
-    public static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM1 = "param1";
     private String id;
 
     private OnFragmentInteractionListener mListener;
@@ -34,21 +35,13 @@ public class ChampionshipSelectionFragment extends Fragment {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static DatabaseReference reference = database.getReference();
 
-    private ArrayList<Integer> allowedYears = new ArrayList<>();
-    private ArrayList<Championship> campionati = new ArrayList<>();
+    private List<Championship> campionati = new ArrayList<>();
     private ListView mlistview;
 
     public ChampionshipSelectionFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @return A new instance of fragment ChampionshipSelectionFragment.
-     */
     public static ChampionshipSelectionFragment newInstance(String param1) {
 
         ChampionshipSelectionFragment fragment = new ChampionshipSelectionFragment();
@@ -63,24 +56,16 @@ public class ChampionshipSelectionFragment extends Fragment {
         if (getArguments() != null) {
             id = getArguments().getString(ARG_PARAM1);
             String query = String.format("%s/Campionati",id);
-            for(int year = Calendar.getInstance().get(Calendar.YEAR); year >= 2017; year--){
-                //TODO add in modal
-                //TODO: check in modal the last two years
-                //TODO: change following line
-                allowedYears.add(year);
-            }
-            reference.child(query).addValueEventListener(new ValueEventListener() {
+            reference.child(query).limitToLast(3).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     campionati.clear();
                     for(DataSnapshot Yearsnapshot : dataSnapshot.getChildren()){
-                        if(allowedYears.contains(Integer.parseInt(Yearsnapshot.getKey()))){
-                            for(DataSnapshot snap : Yearsnapshot.getChildren()){
-                                Championship c = snap.getValue(Championship.class);
-                                if(c!= null) {
-                                    c.id = snap.getKey();
-                                    campionati.add(c);
-                                }
+                        for(DataSnapshot snap : Yearsnapshot.getChildren()){
+                            Championship c = snap.getValue(Championship.class);
+                            if(c!= null) {
+                                c.id = snap.getKey();
+                                campionati.add(c);
                             }
                         }
                     }
@@ -90,7 +75,6 @@ public class ChampionshipSelectionFragment extends Fragment {
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-                    //TODO: add exception on server if cancelled
                 }
             });
         }

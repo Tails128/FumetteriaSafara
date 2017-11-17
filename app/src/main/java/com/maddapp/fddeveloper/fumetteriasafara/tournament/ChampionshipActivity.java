@@ -145,7 +145,6 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        //TODO: filters?
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_tornei, menu);
         return false;   //(true per visibile)
