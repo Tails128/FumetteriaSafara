@@ -184,14 +184,14 @@ public class FragmentMailRegister extends Fragment implements LoaderManager.Load
 
         //check for a valid surname
         if(TextUtils.isEmpty(surname)){
-            mSurname.setError("Il campo cognome è richiesto");
+            mSurname.setError(ctx.getString(R.string.mail_register_error_surname));
             focusView = mSurname;
             cancel = true;
         }
 
         //check for a valid name
         if(TextUtils.isEmpty(name)){
-            mName.setError("Il campo nome è richiesto");
+            mName.setError(ctx.getString(R.string.mail_register_error_name));
             focusView = mName;
             cancel = true;
         }
