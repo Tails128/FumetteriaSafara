@@ -171,7 +171,6 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
-                //todo ?
             }
         });
         mLoginManager.logOut();
