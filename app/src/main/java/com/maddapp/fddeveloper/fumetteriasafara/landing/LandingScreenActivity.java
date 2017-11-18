@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -102,7 +103,9 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
             handleLoggedUser();
         }
 
-        findViewById(R.id.button2).setOnClickListener(new View.OnClickListener(){
+        //mail login
+
+        findViewById(R.id.mailFab).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View arg0){
                 Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
@@ -113,7 +116,7 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
         //google login
 
         mGoogleApiClient.connect();
-        findViewById(R.id.googleSignIn).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.googleFab).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mGoogleApiClient);
@@ -123,7 +126,7 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
 
         //facebook login
 
-        LoginButton loginButton = findViewById(R.id.facebook_login);
+        final LoginButton loginButton = findViewById(R.id.facebook_login);
         loginButton.setReadPermissions("email","public_profile");
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
@@ -144,7 +147,15 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
             }
         });
 
+        findViewById(R.id.facebookFab).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                loginButton.callOnClick();
+            }
+        });
+
         //todo: twitter login ?
+
     }
 
     @Override

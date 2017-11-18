@@ -1,5 +1,8 @@
 package com.maddapp.fddeveloper.fumetteriasafara.adapters;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +36,13 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        holder.mContentView.setText(mValues.get(position).toString());
+        if(! holder.mItem.isConfirmed()) {
+            //TODO: set an image instead of changing color and text (future version)
+            holder.mContentView.setText("In attesa di approvazione | " + mValues.get(position).toString());
+            holder.mContentView.setTextColor(Color.parseColor("#FF0000"));
+        }
+        else
+            holder.mContentView.setText(mValues.get(position).toString());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
