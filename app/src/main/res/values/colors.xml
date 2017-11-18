@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <color name="colorPrimary">#35b549</color>
     <color name="colorPrimaryDark">#028216</color>
     <color name="colorPrimaryVeryDark">#006900</color>
@@ -8,5 +9,8 @@
     <color name="gold">#FFD700</color>
     <color name="silver">#c0c0c0</color>
     <color name="bronze">#cd7f32</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="background_light">#F5F5F5</color>
 
 </resources>

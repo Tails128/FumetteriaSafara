@@ -2,12 +2,13 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/background_light"
+    >
 
     <ImageView
         android:id="@+id/logo"
@@ -15,13 +16,20 @@
         android:layout_height="0dp"
         android:layout_weight="7"
         app:srcCompat="@drawable/logo_safara"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/googleSignIn"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"
         android:contentDescription="@string/safara_logo_description"
+        />
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:text="@string/landing_text"
+        android:textSize="20sp"
+        android:gravity="center"
+        android:background="@drawable/rectangle_primary_color"
+        android:textColor="@color/cardview_light_background"
+        android:elevation="8dp"
         />
 
     <ProgressBar
@@ -30,7 +38,7 @@
         style="?android:attr/progressBarStyleLarge"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:indeterminateDrawable="@drawable/progress_circular"
         android:visibility="gone"
 
@@ -40,18 +48,68 @@
         app:layout_constraintBottom_toBottomOf="parent"/>
 
     <LinearLayout
+        android:layout_weight="2"
         android:id="@+id/loginMethods"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:gravity="center">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/googleFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:backgroundTint="@color/cardview_light_background"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:borderWidth="0dp"
+            android:src="@drawable/googleg_standard_color_18"
+            app:fabSize="normal"
+            android:elevation="8dp"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/facebookFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:backgroundTint="@color/com_facebook_blue"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:borderWidth="0dp"
+            android:src="@drawable/com_facebook_button_icon"
+            app:fabSize="normal"
+            />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/mailFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:focusable="true"
+            android:backgroundTint="@color/cardview_light_background"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            app:borderWidth="0dp"
+            app:srcCompat="@drawable/ic_email_black_24dp"
+            app:fabSize="normal"
+            />
+    </LinearLayout>
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="3"
         android:orientation="vertical"
+        android:visibility="gone"
         >
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/googleSignIn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"
@@ -64,30 +122,14 @@
             android:id="@+id/facebook_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="3"
             android:layout_marginBottom="16dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            app:layout_constraintBottom_toTopOf="@id/button2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             android:textSize="20sp"
             />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="3"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="20sp"
-            android:layout_marginRight="20sp"
-            android:text="@string/login_button"
-            app:layout_constraintBottom_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
 
     </LinearLayout>
 
