@@ -1,14 +1,15 @@
 package com.maddapp.fddeveloper.fumetteriasafara.main;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
-import android.nfc.FormatException;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -91,59 +92,6 @@ public class FragmentAddBooking extends DialogFragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.dialog_books,container,false);
-    }
-
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        //dismiss button
-        view.findViewById(R.id.btnCancella).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                dismiss();
-            }
-        });
-        //confirm button
-        view.findViewById(R.id.btnConferma).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-            //First check if there's a selected book
-            String id = ((SimpleSpinnerItem)mSpinner.getSelectedItem()).id;
-            if(id == null || id.equals("")){
-                Toast.makeText(ctx, ctx.getText(R.string.error_comic_spinner), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            //then we check if a comic number is selected (0 is available in case there are "number 0 books"
-            int comicNumber;
-            try{
-                comicNumber =Integer.parseInt(startingNumber.getText().toString());
-                if(comicNumber < 0)
-                    throw new FormatException("Format exception in fragment add booking");
-            }
-            catch(Exception e){
-                Toast.makeText( ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
-                return;
-            }
-            //finally we put in the user's temporary bookings the key-value pair corresponding to the booking he selected
-            String query = String.format(Locale.ITALIAN,"TempBookings/%s/%s", FirebaseAuth.getInstance().getUid(), id);
-            reference.child(query).setValue(comicNumber).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(ctx, ctx.getString(R.string.success_comic_booking), Toast.LENGTH_SHORT).show();
-                    dismiss();
-                }
-            });
-            }
-        });
-        mSpinner = view.findViewById(R.id.spinner);
-        startingNumber = view.findViewById(R.id.starting_number);
-        setSpinner();       //synchronize booklist with spinner
-    }
-
-    @Override
     public void onAttach(Context context) {
         super.onAttach(context);
     }
@@ -166,6 +114,7 @@ public class FragmentAddBooking extends DialogFragment {
                 int i = 0;
                 for (String key : books.keySet()) {
                     items[i] = new SimpleSpinnerItem(key, books.get(key).getName());
+                    i++;
                 }
             }
             //spinner's adapter creation and application
@@ -173,5 +122,66 @@ public class FragmentAddBooking extends DialogFragment {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             mSpinner.setAdapter(adapter);
         }
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        LayoutInflater inflater = getActivity().getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_books, null);
+        mSpinner = view.findViewById(R.id.spinner);
+        setSpinner();
+        startingNumber = view.findViewById(R.id.starting_number);
+        builder.setTitle("test");
+        builder.setView(view);
+        builder.setNegativeButton(R.string.cancel_comic_ita, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dismiss();
+            }
+        });
+        builder.setPositiveButton(R.string.confirm_comic_ita, null);
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        String id = ((SimpleSpinnerItem)mSpinner.getSelectedItem()).id;
+                        if(id == null || id.equals("")){
+                            Toast.makeText(ctx, ctx.getText(R.string.error_comic_spinner), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //then we check if a comic number is selected (0 is available in case there are "number 0 books"
+                        int comicNumber;
+                        try{
+                            comicNumber =Integer.parseInt(startingNumber.getText().toString());
+                            if(comicNumber < 0) {
+                                Toast.makeText( ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
+                        catch(Exception e){
+                            Toast.makeText( ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                        //finally we put in the user's temporary bookings the key-value pair corresponding to the booking he selected
+                        String query = String.format(Locale.ITALIAN,"TempBookings/%s/%s", FirebaseAuth.getInstance().getUid(), id);
+                        reference.child(query).setValue(comicNumber).addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                Toast.makeText(ctx, ctx.getString(R.string.success_comic_booking), Toast.LENGTH_SHORT).show();
+                                dismiss();
+                            }
+                        });
+                    }
+                });
+                dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+                dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
+            }
+        });
+        return dialog;
     }
 }

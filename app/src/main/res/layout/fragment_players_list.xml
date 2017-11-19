@@ -10,4 +10,5 @@
     android:paddingRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.maddapp.fddeveloper.fumetteriasafara.tournament.FragmentPlayerLadder"
-    tools:listitem="@layout/fragment_list_players" />
+    tools:listitem="@layout/fragment_list_players"
+    style="@style/Base.Widget.AppCompat.ListView"/>

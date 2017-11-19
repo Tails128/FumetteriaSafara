@@ -1,12 +1,10 @@
 package com.maddapp.fddeveloper.fumetteriasafara.adapters;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.maddapp.fddeveloper.fumetteriasafara.R;
@@ -34,23 +32,23 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
-        if(! holder.mItem.isConfirmed()) {
-            //TODO: set an image instead of changing color and text (future version)
-            holder.mContentView.setText("In attesa di approvazione | " + mValues.get(position).toString());
-            holder.mContentView.setTextColor(Color.parseColor("#FF0000"));
-        }
+        if(! holder.mItem.isConfirmed())
+            holder.mImageview.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
         else
-            holder.mContentView.setText(mValues.get(position).toString());
+            holder.mImageview.setImageResource(R.drawable.ic_done_black_24dp);
+        holder.mContentView.setText(mValues.get(position).toString());
+
+        final String name = holder.mItem.getComicName();
+        final int number = holder.mItem.getNumber();
+        final boolean confirmed = holder.mItem.isConfirmed();
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
-                    // Notify the active callbacks interface (the activity, if the
-                    // fragment is attached to one) that an item has been selected.
-                    mListener.onAddBooking();
+                    mListener.showBooking(name, number, confirmed);
                 }
             }
         });
@@ -64,12 +62,14 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
+        public final ImageView mImageview;
         public Booking mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = view.findViewById(R.id.content);
+            mImageview = view.findViewById(R.id.image);
         }
 
         @Override

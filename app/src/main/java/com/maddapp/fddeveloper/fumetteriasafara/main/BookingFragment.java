@@ -124,7 +124,7 @@ public class BookingFragment extends Fragment {
             Context context = view.getContext();
             mrecyclerview = (RecyclerView) v;
             mrecyclerview.setLayoutManager(new LinearLayoutManager(context));
-            mrecyclerview.setAdapter(new BookingRecyclerViewAdapter(items, null));
+            mrecyclerview.setAdapter(new BookingRecyclerViewAdapter(items, mListener));
             mrecyclerview.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
         }
         view.findViewById(R.id.FABBooking).setOnClickListener(new View.OnClickListener() {
@@ -204,5 +204,6 @@ public class BookingFragment extends Fragment {
 
     public interface OnListFragmentInteractionListener {
         void onAddBooking();
+        void showBooking(String title, int comic_number, boolean confirmed);
     }
 }

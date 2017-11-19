@@ -7,16 +7,6 @@
     android:paddingTop="16dp"
     android:paddingBottom="16dp">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/book_modal_title"
-        android:gravity="center"
-        android:textSize="23sp"
-        android:textStyle="bold"
-        android:layout_marginTop="5dp"/>
-
     <Spinner
         android:id="@+id/spinner"
         android:layout_width="match_parent"
@@ -38,29 +28,4 @@
         android:inputType="number"
         android:hint="@string/dialog_numero_fumetto"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:weightSum="2">
-
-
-        <Button
-            android:id="@+id/btnCancella"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/cancel_comic_ita"/>
-
-        <Button
-            android:id="@+id/btnConferma"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/confirm_comic_ita" />
-    </LinearLayout>
 </LinearLayout>

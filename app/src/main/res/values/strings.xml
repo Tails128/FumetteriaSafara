@@ -75,6 +75,8 @@
 
     <string name="punti_madda">Punti accumulati:</string>
     <string name="punti_torneo">Bonus torneo accumulato:</string>
+    <string name="punti_madda_dummy">Punti accumulati: 0.00 €</string>
+    <string name="punti_torneo_dummy">Bonus torneo accumulato: 0.00 €</string>
 
     <string name="trophy_icon_description">A trophy coloured accordingly to the position of the player</string>
     <string name="points_icon_description">A symbol for points</string>
@@ -93,5 +95,7 @@
 
     <string name="dummy">dummy</string>
     <string name="landing_text">Per iniziare effettua il login</string>
+    <string name="booking_icon_description">a sign to show if the booking is accepted or pending</string>
+    <string name="transaction_icon_description">An icon to show if the transaction was positive or negative</string>
 
 </resources>

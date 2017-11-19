@@ -2,8 +2,18 @@
 
 > Please notice that since the app is restricted for a limited set of users, it will always be in an endless beta
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
+df
 
-### 2.0 Endless beta
+### 2.2 Endless Beta
+- Forced facebook logout
+
+### 2.1 Endless Beta
+- Solved a bug which occurred on book list reading
+- massive UI update
+- Removed a dummy text appearing on the mail login
+- Added the possibility to get back from championship selection to game selection
+
+### 2.0 Endless Beta
 - Added support for bookings management
 - Solved (again...) a problem with context
 - Improved the mail register experience

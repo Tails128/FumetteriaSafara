@@ -1,14 +1,20 @@
 package com.maddapp.fddeveloper.fumetteriasafara.main;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.facebook.AccessToken;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.HttpMethod;
 import com.facebook.login.LoginManager;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -25,6 +31,8 @@ import com.maddapp.fddeveloper.fumetteriasafara.sharedThings.CardsManager;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipSelectionFragment;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.GameSelectionFragment;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipActivity;
+
+import java.util.Locale;
 
 /**
  * The main activity of the app: after logging in this activity works as a hub
@@ -45,12 +53,14 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     private final SettingsFragment optionFragment = SettingsFragment.newInstance();
     private final FragmentAddBooking fragmentAddBooking = FragmentAddBooking.newInstance();
     private ChampionshipSelectionFragment championshipFragment;
+    private boolean backToGames = false;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            backToGames = false;
             FragmentTransaction f = fm.beginTransaction();
             f.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             switch (item.getItemId()) {
@@ -123,9 +133,10 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     //Implementing GameSelectionFragment.OnFragmentInteraction
     @Override
     public void onFragmentGameInteraction(String destination) {
+        backToGames = true;
         championshipFragment = ChampionshipSelectionFragment.newInstance(destination);
         FragmentTransaction t = getSupportFragmentManager().beginTransaction();
-        t.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+        t.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         t.replace(R.id.content, championshipFragment);
         t.commit();
         CardsManager.setList(destination);
@@ -141,6 +152,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     }
 
     public void onFragmentHomeInteraction(String mode){
+        TransactionRecapActivity recap = new TransactionRecapActivity();
         Intent intent = new Intent(getApplicationContext(), TransactionRecapActivity.class);
         intent.putExtra("mode",mode);
         startActivity(intent);
@@ -153,13 +165,30 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
             public void onResult(@NonNull Status status) {
             }
         });
-        mLoginManager.logOut();
+        disconnectFromFacebook();
 
         Intent intent = new Intent(getApplicationContext(), LandingScreenActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         this.finish();
     }
+
+    private void disconnectFromFacebook() {
+        if (AccessToken.getCurrentAccessToken() == null) {
+            return; // already logged out
+        }
+
+        new GraphRequest(AccessToken.getCurrentAccessToken(), "/me/permissions/", null, HttpMethod.DELETE, new GraphRequest
+                .Callback() {
+            @Override
+            public void onCompleted(GraphResponse graphResponse) {
+
+                LoginManager.getInstance().logOut();
+
+            }
+        }).executeAsync();
+    }
+
 
     public  void makeLog(String text){
         if(text == null || text.trim().equals(""))
@@ -173,4 +202,38 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
         fragmentAddBooking.show(getSupportFragmentManager(),"addBooking");
     }
 
+    @Override
+    public void showBooking(String title, int comic_number, boolean confirmed) {
+        String text = String.format(Locale.ITALIAN,"numero:\t%d\nstato:\t%s",comic_number, confirmed? "approvato" : "in attesa di approvazione");
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title)
+                .setMessage(text)
+                .setPositiveButton("Ok!", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.dismiss();
+                    }
+                });
+        final AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialogInterface) {
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(MainActivity.this.getResources().getColor(R.color.colorPrimary));
+            }
+        });
+        dialog.show();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(backToGames) {
+            FragmentTransaction t = getSupportFragmentManager().beginTransaction();
+            t.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+            t.replace(R.id.content, gameSelectionFragment);
+            t.commit();
+        }
+            else
+        super.onBackPressed();
+    }
 }
