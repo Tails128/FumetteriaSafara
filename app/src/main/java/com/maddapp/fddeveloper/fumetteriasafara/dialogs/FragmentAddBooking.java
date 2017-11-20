@@ -1,4 +1,4 @@
-package com.maddapp.fddeveloper.fumetteriasafara.main;
+package com.maddapp.fddeveloper.fumetteriasafara.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -40,6 +40,10 @@ public class FragmentAddBooking extends DialogFragment {
     private EditText startingNumber;
     Context ctx;
 
+    /**
+     * public constructor. It sets the FireBase listener for the comics to read.
+     * Please avoid using this and use the {@Link newInstance} function instead.
+     */
     public FragmentAddBooking() {
         //the constructor must set child event listeners to populate the spinner.
         //books is the support list which keeps the book list
@@ -79,26 +83,20 @@ public class FragmentAddBooking extends DialogFragment {
      * @return a new instance of FragmentAddBooking
      */
     public static FragmentAddBooking newInstance() {
-        FragmentAddBooking fragment = new FragmentAddBooking();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentAddBooking fragment = new FragmentAddBooking();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentAddBooking();
     }
 
+    /**
+     * simple onCreate function which stores the context in order to avoid calling getActivity multiple times
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = getActivity();        //context-related error prevention
-    }
-
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
     }
 
     /**
@@ -124,31 +122,42 @@ public class FragmentAddBooking extends DialogFragment {
         }
     }
 
+    /**
+     * This is the function which returns a Dialog with a spinner and an input text field to create
+     * the booking to submit
+     * @param savedInstanceState
+     * @return
+     */
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        //creating a view for the 'content' chunk of the Dialog
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.dialog_books, null);
+        //populating the spinner inside the view and saving references for the onClick
         mSpinner = view.findViewById(R.id.spinner);
         setSpinner();
         startingNumber = view.findViewById(R.id.starting_number);
-        builder.setTitle("test");
-        builder.setView(view);
+        builder.setTitle(R.string.book_modal_title);                    //Dialog title
+        builder.setView(view);                                          //Dialog content
+        //Dialog actions
         builder.setNegativeButton(R.string.cancel_comic_ita, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dismiss();
             }
         });
+        //the onclick for the positive button is set in a second moment since it needs to prevent the dismiss()
         builder.setPositiveButton(R.string.confirm_comic_ita, null);
-        final AlertDialog dialog = builder.create();
+        final AlertDialog dialog = builder.create();            //dialog saved for dismiss
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface dialogInterface) {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        //checking the spinner
                         String id = ((SimpleSpinnerItem)mSpinner.getSelectedItem()).id;
                         if(id == null || id.equals("")){
                             Toast.makeText(ctx, ctx.getText(R.string.error_comic_spinner), Toast.LENGTH_SHORT).show();
@@ -178,6 +187,7 @@ public class FragmentAddBooking extends DialogFragment {
                         });
                     }
                 });
+                //finally we color the flat buttons according to the theme
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
                 dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(ctx.getResources().getColor(R.color.colorPrimary));
             }

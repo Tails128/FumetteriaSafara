@@ -15,20 +15,24 @@ import java.util.Map;
  *  A membership card manager which prevents from loading multiple times the same membership cards
  */
 public class CardsManager {
-    private static Map<String,Map<String, MembershipCard>> listaTessere = new HashMap<>();
+    private static Map<String,Map<String, MembershipCard>> cardsList = new HashMap<>();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static DatabaseReference reference = database.getReference();
 
-    public static void setList(String gioco){
-        final String giocoTemp = gioco;
-        if(!listaTessere.containsKey(gioco)) {
-            listaTessere.put(gioco, new HashMap<String, MembershipCard>());
-            String query = String.format("%s/Tessere",gioco);
+    /**
+     * adds a listener to collect the membership cards associated with the given TCG
+     * @param game the TCG to collect the membership cards from
+     */
+    public static void setList(String game){
+        final String tempGame = game;
+        if(!cardsList.containsKey(game)) {
+            cardsList.put(game, new HashMap<String, MembershipCard>());
+            String query = String.format("%s/Tessere",game);
             reference.child(query).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    for (DataSnapshot tessera : dataSnapshot.getChildren()) {
-                        listaTessere.get(giocoTemp).put(tessera.getKey(),tessera.getValue(MembershipCard.class));
+                    for (DataSnapshot card : dataSnapshot.getChildren()) {
+                        cardsList.get(tempGame).put(card.getKey(),card.getValue(MembershipCard.class));
                     }
                 }
 
@@ -39,17 +43,25 @@ public class CardsManager {
         }
     }
 
-    public static Map<String, MembershipCard> getTessere(String gioco){
-        return listaTessere.get(gioco);
-    }
-
-    public static MembershipCard getTessera(String gioco, String id){
-        if(listaTessere.get(gioco) == null)
+    /**
+     * tryes to return the Membership card associated with the game and cardId given
+     * @param game card's TCG
+     * @param cardId card's id
+     * @return Membership card if the card's found, null if not
+     */
+    public static MembershipCard getMembershipCard(String game, String cardId){
+        if(cardsList.get(game) == null)
             return  null;
-        return listaTessere.get(gioco).get(id);
+        return cardsList.get(game).get(cardId);
     }
 
-    public static boolean containsKey(String gioco, String id){
-        return listaTessere.containsKey(gioco) && listaTessere.get(gioco).containsKey(id);
+    /**
+     * checks if the membership card for a game and cardId couple is available
+     * @param game card's TCG
+     * @param cardId card's id
+     * @return
+     */
+    public static boolean containsKey(String game, String cardId){
+        return cardsList.containsKey(game) && cardsList.get(game).containsKey(cardId);
     }
 }

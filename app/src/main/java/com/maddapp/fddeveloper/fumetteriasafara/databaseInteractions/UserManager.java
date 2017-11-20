@@ -23,8 +23,13 @@ public class UserManager {
     private static DatabaseReference reference = database.getReference();
     public static User CurrentUserData = new User();
 
-    public static void readUser(FirebaseUser u, final Context cont){
-        String query = "Users/"+u.getUid()+"/";
+    /**
+     * a function to attempt reading the user data
+     * @param user
+     * @param ctx context is required since the function may need to make a Toast
+     */
+    public static void readUser(FirebaseUser user, final Context ctx){
+        String query = "Users/"+user.getUid()+"/";
         reference.child(query).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -32,7 +37,7 @@ public class UserManager {
                 if(CurrentUserData == null )
                     CurrentUserData = new User();
                 if(CurrentUserData.Nome.equals("") || CurrentUserData.Cognome.equals(""))
-                    Toast.makeText(cont,"Benvenuto!\nCome prima cosa imposta il tuo nome ed il tuo cognome in impostazioni!\nUsa i tuoi Nome e Cognome reali!" ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ctx,"Benvenuto!\nCome prima cosa imposta il tuo nome ed il tuo cognome in impostazioni!\nUsa i tuoi Nome e Cognome reali!" ,Toast.LENGTH_SHORT).show();
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
@@ -40,17 +45,30 @@ public class UserManager {
         });
     }
 
-    public static void writeUser(FirebaseUser u){
+    /**
+     * writes an empty user into database.
+     * @param user
+     */
+    public static void writeUser(FirebaseUser user){
         Map<String,Object> temp = new HashMap<>();
-        temp.put(u.getUid(),CurrentUserData);
+        temp.put(user.getUid(),CurrentUserData);
         reference.child("Users/").updateChildren(temp);
     }
 
-    public static void writeUser(String nome, String cognome, FirebaseUser u){
-        String id = u.getUid();
-        User tempuser = new User();
-        tempuser.Nome = nome;
-        tempuser.Cognome = cognome;
-        reference.child("Users/" + id).updateChildren(tempuser.toMap());
+    /**
+     * function which writes user data to db, it must be called after the user's logged since
+     * only logged users have access the them data
+     * @param name
+     * @param surname
+     * @param user
+     */
+    public static void writeUser(String name, String surname, FirebaseUser user){
+        if(user == null)
+            return;
+        String id = user.getUid();
+        User temporaryUser = new User();
+        temporaryUser.Nome = name;
+        temporaryUser.Cognome = surname;
+        reference.child("Users/" + id).updateChildren(temporaryUser.toMap());
     }
 }

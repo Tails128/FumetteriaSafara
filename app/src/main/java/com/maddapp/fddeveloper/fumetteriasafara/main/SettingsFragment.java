@@ -21,26 +21,22 @@ public class SettingsFragment extends Fragment {
     private EditText bugText;
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * empty public constructor. Please avoid using this and use {@Link newInstance} instead
+     */
     public SettingsFragment() {
                 // Required empty public constructor
     }
 
+    /**
+     * simple new instance constructor. Atm it is not doing additional actions
+     * @return a new working and correctly initialized SettingsFragment
+     */
     public static SettingsFragment newInstance() {
-        SettingsFragment fragment = new SettingsFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        mAuth = FirebaseAuth.getInstance();
+//        SettingsFragment fragment = new SettingsFragment();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new SettingsFragment();
     }
 
     @Override
@@ -50,13 +46,22 @@ public class SettingsFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_option, container, false);
     }
 
+    /**
+     * onViewCreated simply sets the onClick listeners for the name update, the request to update
+     * name and surname and for the logout button
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
         super.onViewCreated(view,savedInstanceState);
+        //setting variables
         name = view.findViewById(R.id.editName);
         name.setText(UserManager.CurrentUserData.Nome);
         surname = view.findViewById(R.id.editSurname);
         surname.setText(UserManager.CurrentUserData.Cognome);
+        bugText= view.findViewById(R.id.bugText);
+        //setting onclick for name update
         view.findViewById(R.id.buttonSetName).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,13 +76,14 @@ public class SettingsFragment extends Fragment {
                 }
             }
         });
+        //setting onclick for the logout button
         view.findViewById(R.id.buttonLogout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mListener.logout();
             }
         });
-        bugText= view.findViewById(R.id.bugText);
+        //setting onclick for the logout button
         view.findViewById(R.id.bugButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,8 +112,8 @@ public class SettingsFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void logout();
-        void makeLog(String text);
+        void logout();              //an iterface for the logout is required
+        void makeLog(String text);  //an interface to log errors which the users want to signal
     }
 
 }

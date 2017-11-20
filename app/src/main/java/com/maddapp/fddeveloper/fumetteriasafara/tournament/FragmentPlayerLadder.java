@@ -27,23 +27,30 @@ public class FragmentPlayerLadder extends Fragment {
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
+     * fragment (e.g. upon screen orientation changes). Please avoid using this and use
+     * {@Link newInstance} instead.
      */
     public FragmentPlayerLadder() {
     }
 
+    /**
+     * default newInstance initializator.
+     * @return a correctly instantiated FragmentPlayerLadder
+     */
     public static FragmentPlayerLadder newInstance() {
-        FragmentPlayerLadder fragment = new FragmentPlayerLadder();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentPlayerLadder fragment = new FragmentPlayerLadder();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentPlayerLadder();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
+    /**
+     * onCreateView. initializes the list.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +67,10 @@ public class FragmentPlayerLadder extends Fragment {
         return view;
     }
 
+    /**
+     * function to update the ui accordingly to the "items" list
+     * @param items
+     */
     public void setList(List<PositionRecap> items){
         items = PositionRecap.RatePosizioni(items);
         if(mrecyclerview!= null)
@@ -85,6 +96,6 @@ public class FragmentPlayerLadder extends Fragment {
     }
 
     public interface OnListFragmentInteractionListener {
-        void onClassificaGiocatoreInteraction(Object item);
+        void onPlayerLadderInteraction(Object item);        //interface to handle the onclick for the player list item click
     }
 }

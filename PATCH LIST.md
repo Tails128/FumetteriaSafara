@@ -6,6 +6,8 @@ df
 
 ### 2.2 Endless Beta
 - Forced facebook logout
+- Solved a bug concerning the title of booking recaps
+- Code cleanup
 
 ### 2.1 Endless Beta
 - Solved a bug which occurred on book list reading

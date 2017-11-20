@@ -35,12 +35,23 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
         return new ViewHolder(view);
     }
 
+    /**
+     * onBind variables are set, the icon is coloured accordingly to the player's position and the
+     * texts containing the membership card name and the score for the tournament are set. An onClick
+     * listener containing the onPlayerLadderInteraction interface is also set.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+
+        //setting texts
         holder.mContentView.setText(mValues.get(position).Nome);
         holder.mPoints.setText(String.valueOf(mValues.get(position).Punteggio));
 
+        // colouring the icon. 1st Player gets gold, second gets silver, third gets bronze, 4th+ is
+        // hidden
         Context mContext = holder.mImage.getContext();
         switch (holder.mItem.Posizione){
             case 1:
@@ -57,13 +68,14 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
                 break;
         }
 
+        //setting onClick
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onClassificaGiocatoreInteraction(holder.mItem);
+                    mListener.onPlayerLadderInteraction(holder.mItem);
                 }
             }
         });

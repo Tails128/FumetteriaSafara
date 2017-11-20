@@ -9,16 +9,16 @@
     <item
         android:id="@+id/navigation_abbonamenti"
         android:icon="@drawable/ic_book_black_24dp"
-        android:title="@string/menu_abbonamenti" />
+        android:title="@string/menu_bookings" />
 
     <item
         android:id="@+id/navigation_tornei"
         android:icon="@drawable/ic_trophy_black_24dp"
-        android:title="@string/menu_tornei" />
+        android:title="@string/menu_tournaments" />
 
     <item
         android:id="@+id/navigation_opzioni"
         android:icon="@drawable/ic_settings_black_24dp"
-        android:title="@string/menu_opzioni" />
+        android:title="@string/menu_options" />
 
 </menu>

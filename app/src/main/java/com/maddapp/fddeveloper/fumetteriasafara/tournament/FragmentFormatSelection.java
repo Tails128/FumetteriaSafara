@@ -17,32 +17,46 @@ import java.util.List;
 
 /**
  * A fragment for the format selection. Every format is displayed as a list item. On click the
- * onFragmentClassificheFormatiInteraction is called
+ * onFragmentFormatLadderInteraction is called
  */
 public class FragmentFormatSelection extends Fragment {
 
-    private List<String> mFormati = new ArrayList<>();
-    private ListView mListFormati;
+    private List<String> mFormats = new ArrayList<>();
+    private ListView mListFormats;
 
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * default empty constructor. Please avoid using this and use {@Link FragmentFormatSelection.newInstance} instead
+     */
     public FragmentFormatSelection() {
         // Required empty public constructor
     }
 
+    /**
+     * default empty newInstance constructor. No parameters are needed.
+     * @return
+     */
     public static FragmentFormatSelection newInstance() {
-        FragmentFormatSelection fragment = new FragmentFormatSelection();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentFormatSelection fragment = new FragmentFormatSelection();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentFormatSelection();
     }
 
+    /**
+     * onCreate view: sets the variables for {@Link setList} and calls it
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
-        mListFormati = view.findViewById(R.id.list_fragment);
-        setList(mFormati);
+        mListFormats = view.findViewById(R.id.list_fragment);
+        setList();
         return view;
     }
 
@@ -53,7 +67,7 @@ public class FragmentFormatSelection extends Fragment {
             mListener = (OnFragmentInteractionListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement onFragmentClassificheFormatiInteraction");
+                    + " must implement onFragmentFormatLadderInteraction");
         }
     }
 
@@ -63,20 +77,27 @@ public class FragmentFormatSelection extends Fragment {
         mListener = null;
     }
 
-    public void setList(List<String> formati){
-        mFormati = formati;
-        if(mFormati.size()!=0 &&getContext()!= null) {
-            mListFormati.setAdapter(new ArrayAdapter(getContext() , android.R.layout.simple_list_item_1, mFormati.toArray()));
-            mListFormati.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    /**
+     * The function which updates the list in the UI. needs to be called everytime the list is updated.
+     */
+    public void setList(){
+        if(mFormats.size()!=0 &&getContext()!= null) {
+            mListFormats.setAdapter(new ArrayAdapter<>(getContext() , android.R.layout.simple_list_item_1, mFormats.toArray()));
+            mListFormats.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    mListener.onFragmentClassificheFormatiInteraction(mListFormati.getAdapter().getItem(i).toString());
+                    mListener.onFragmentFormatLadderInteraction(mListFormats.getAdapter().getItem(i).toString());
                 }
             });
         }
     }
 
+    public void setList(List<String> list){
+        mFormats = list;
+        setList();
+    }
+
     public interface OnFragmentInteractionListener {
-        void onFragmentClassificheFormatiInteraction(String formato);
+        void onFragmentFormatLadderInteraction(String format);  //interface which implements the format list element onClick action
     }
 }

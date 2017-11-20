@@ -14,6 +14,11 @@ import com.maddapp.fddeveloper.fumetteriasafara.main.BookingFragment.OnListFragm
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * A RecyclerView adapter for the Booking entity.
+ * It displays icons asserting if the booking is pending or confirmed and a text containing the booking's
+ * comic book's name and first number.
+ */
 public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecyclerViewAdapter.ViewHolder> {
 
     private final List<Booking> mValues;
@@ -31,19 +36,28 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
         return new ViewHolder(view);
     }
 
+    /**
+     * onBind variables are set, the icon swaps according to the mItem.isConfirmed() and an OnClick
+     * listener is set according to the showBooking interface.
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
+        //swapping accordingly to isConfirmed()
         if(! holder.mItem.isConfirmed())
-            holder.mImageview.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
+            holder.mImageView.setImageResource(R.drawable.ic_hourglass_empty_black_24dp);
         else
-            holder.mImageview.setImageResource(R.drawable.ic_done_black_24dp);
+            holder.mImageView.setImageResource(R.drawable.ic_done_black_24dp);
         holder.mContentView.setText(mValues.get(position).toString());
 
+        //getting data for the onClick
         final String name = holder.mItem.getComicName();
         final int number = holder.mItem.getNumber();
         final boolean confirmed = holder.mItem.isConfirmed();
 
+        //setting onClick
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,16 +74,16 @@ public class BookingRecyclerViewAdapter extends RecyclerView.Adapter<BookingRecy
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView mContentView;
-        public final ImageView mImageview;
-        public Booking mItem;
+        final View mView;
+        final TextView mContentView;        // TextView in the view
+        final ImageView mImageView;         // ImageView in the view
+        Booking mItem;
 
-        public ViewHolder(View view) {
+        ViewHolder(View view) {
             super(view);
             mView = view;
             mContentView = view.findViewById(R.id.content);
-            mImageview = view.findViewById(R.id.image);
+            mImageView = view.findViewById(R.id.image);
         }
 
         @Override

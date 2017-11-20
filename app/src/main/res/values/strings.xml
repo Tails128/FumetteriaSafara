@@ -11,19 +11,20 @@
 
     <!--Menu items-->
     <string name="menu_home">Home</string>
-    <string name="menu_abbonamenti">Abbonamenti</string> <!--I miei abbonamenti-->
-    <string name="menu_tornei">Tornei</string> <!--Classifiche tornei-->
-    <string name="menu_opzioni">Opzioni</string>
+    <string name="menu_bookings">Abbonamenti</string>
+    <string name="menu_tournaments">Tornei</string>
+    <string name="menu_options">Opzioni</string>
 
     <!--Facebook data-->
     <string name="facebook_app_id">888265404665590</string>
     <string name="fb_login_protocol_scheme">fb888265404665590</string>
 
-    <!--loadingScreenActivity-->
-    <string name="register_alternative">puoi anche usare uno dei seguenti metodi:</string>
+    <!--Landing activity-->
+    <string name="landing_text">Per iniziare effettua il login</string>
+
+    <!--mailLogin-->
     <string name="email_hint">e-mail</string>
     <string name="password_hint">password</string>
-    <string name="login_button">Accedi con mail e password</string>
     <string name="register_link">Non sei ancora registrato? Clicca qui!</string>
 
     <!--TCG-->
@@ -37,20 +38,18 @@
     <string name="Pokemon_Logo">Il logo di Pokémon TCG</string>
 
 
-    <!-- Errors-->
-    <string name="game_selection_error">Qualcosa è andato storto, seleziona di nuovo il gioco</string>
-
     <!--Settings-->
     <string name="hint_nome">Nome</string>
     <string name="hint_cognome">Cognome</string>
     <string name="set_name_button">Modifica nome</string>
     <string name="logout_button">Logout</string>
     <string name="segnala_bug_hint">Segnala un problema</string>
+    <string name="action_settings">Settings</string>
+    <string name="mail_register_error_surname">Non hai riempito il campo cognome!</string>
+    <string name="mail_register_error_name">Non hai riempito il campo nome!</string>
 
+    <!--Signin -->
     <string name="title_activity_classic_login">Sign in</string>
-    <string name="Chiudi">Chiudi</string>
-
-    <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Password</string>
     <string name="action_sign_in">Accedi</string>
@@ -58,44 +57,48 @@
     <string name="action_register">Registrati</string>
     <string name="error_invalid_email">Indirizzo e-mail non valido</string>
     <string name="error_invalid_password">La password è troppo corta</string>
-    <string name="error_incorrect_password">Password errata</string>
     <string name="error_field_required">Campo richiesto</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
     <string name="title_activity_login">Sign in</string>
+
+    <!--Tournament ladder-->
     <string name="title_activity_tornei">Classifiche del campionato</string>
     <string name="tab_text_1">Per Torneo</string>
     <string name="tab_text_2">Per Formato</string>
     <string name="tab_text_3">Generali</string>
-    <string name="action_settings">Settings</string>
-    <string name="section_format">Hello World from section: %1$d</string>
-    <string name="mail_register_error_surname">Non hai riempito il campo cognome!</string>
-    <string name="mail_register_error_name">Non hai riempito il campo nome!</string>
-
-    <string name="punti_madda">Punti accumulati:</string>
-    <string name="punti_torneo">Bonus torneo accumulato:</string>
-    <string name="punti_madda_dummy">Punti accumulati: 0.00 €</string>
-    <string name="punti_torneo_dummy">Bonus torneo accumulato: 0.00 €</string>
-
     <string name="trophy_icon_description">A trophy coloured accordingly to the position of the player</string>
     <string name="points_icon_description">A symbol for points</string>
     <string name="safara_logo_description">Safara\'s logo</string>
 
+    <!--HomeFragment-->
+    <string name="punti_madda">Punti accumulati:</string>
+    <string name="punti_torneo">Bonus torneo accumulato:</string>
+    <string name="punti_madda_dummy">Punti accumulati: 0.00 €</string>
+    <string name="punti_torneo_dummy">Bonus torneo accumulato: 0.00 €</string>
+    <string name="transaction_icon_description">An icon to show if the transaction was positive or negative</string>
+
+    <!--BookingFragment-->
     <string name="book_modal_title">Scegli la serie a cui abbonarti</string>
     <string name="dialog_numero_fumetto">Numero di partenza</string>
-
     <string name="cancel_comic_ita">Cancella</string>
     <string name="confirm_comic_ita">Abbonati</string>
-
     <string name="error_comic_number">Inserisci il numero da cui far iniziare l\'abbonamento!</string>
     <string name="error_comic_spinner">Non hai selezionato nessun fumetto!</string>
     <string name="error_comic_no_available_comic">Nessun titolo trovato.</string>
     <string name="success_comic_booking">Richiesta di abbonamento inviata con successo!</string>
-
-    <string name="dummy">dummy</string>
-    <string name="landing_text">Per iniziare effettua il login</string>
     <string name="booking_icon_description">a sign to show if the booking is accepted or pending</string>
-    <string name="transaction_icon_description">An icon to show if the transaction was positive or negative</string>
+
+    <!--Tournament errors-->
+    <string name="error_no_tournament_data_ita">Non sono stati passati dati relativi al gioco o al campionato</string>
+    <string name="error_wrong_championship_ita">Errore nella selezione del campionato</string>
+    <string name="error_no_game_ita">Errore nella selezione del gioco</string>
+    <string name="error_no_format_ita">errore nella lettura del formato</string>
+    <string name="empty_tournament_error_ita">Il torneo risulta vuoto.</string>
+
+    <!--Generics-->
+    <string name="Chiudi">Chiudi</string>
+    <string name="dummy">dummy</string>
 
 </resources>

@@ -1,4 +1,4 @@
-package com.maddapp.fddeveloper.fumetteriasafara.tournament;
+package com.maddapp.fddeveloper.fumetteriasafara.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,22 +13,30 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 
 /**
- * An activity displaying the store's TCG games to chose from
+ * The fragment to display the store's supported TCG games to chose from
  */
 public class GameSelectionFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
     private Context context;
 
+    /**
+     * The empty public constructor for the GameSelectionFragment Fragment.
+     * Please avoid using this and use {@Link newInstance} instead.
+     */
     public GameSelectionFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * simple new instance constructor. Atm it is not doing additional actions
+     * @return a new working and correctly initialized GameSelectionFragment
+     */
     public static GameSelectionFragment newInstance() {
-        GameSelectionFragment fragment = new GameSelectionFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        GameSelectionFragment fragment = new GameSelectionFragment();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new GameSelectionFragment();
     }
 
     @Override
@@ -44,6 +52,12 @@ public class GameSelectionFragment extends Fragment {
         return inflater.inflate(R.layout.fragment_game_selection, container, false);
     }
 
+    /**
+     * onViewCreated function, it extends the Fragment.onViewCreated function.
+     * this function simply sets the various listeners for the game buttons.
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         ImageButton magicButton = view.findViewById(R.id.magicButton);
@@ -99,6 +113,6 @@ public class GameSelectionFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onFragmentGameInteraction(String destination);
+        void onFragmentGameInteraction(String destination); //interface function to handle the buttonclick event.
     }
 }

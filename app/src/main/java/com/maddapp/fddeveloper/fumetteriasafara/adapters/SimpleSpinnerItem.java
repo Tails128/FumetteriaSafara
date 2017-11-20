@@ -1,7 +1,7 @@
 package com.maddapp.fddeveloper.fumetteriasafara.adapters;
 
 /**
- * a spinner key-value pair
+ * A spinner key-value pair. Very simple and intuitive.
  */
 
 public class SimpleSpinnerItem {
@@ -13,6 +13,10 @@ public class SimpleSpinnerItem {
         this.text = text;
     }
 
+    /**
+     * returns the item's text.
+     * @return
+     */
     @Override
     public String toString() {
         return text;

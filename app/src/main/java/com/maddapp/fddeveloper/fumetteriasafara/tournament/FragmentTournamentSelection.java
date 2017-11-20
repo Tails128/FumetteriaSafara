@@ -3,6 +3,7 @@ package com.maddapp.fddeveloper.fumetteriasafara.tournament;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,33 +19,50 @@ import java.util.List;
 
 /**
  * A fragment for the selection of the tournament. Each Tournament is displayed as
- * a list item, on click it calls the onFragmentClassificheTorneiInteraction interface
+ * a list item, on click it calls the onFragmentTournamentLadderInteraction interface
  */
 public class FragmentTournamentSelection extends Fragment {
 
-    private List<Tournament> mTornei = new ArrayList<>();
-    private ListView mListTornei;
+    private List<Tournament> mTournaments = new ArrayList<>();
+    private ListView mTournamentList;
+    Context ctx;
 
     private OnFragmentInteractionListener mListener;
 
+    /**
+     * default public empty constructor. Please avoid using this and use {@Link newInstance} instead
+     */
     public FragmentTournamentSelection() {
         // Required empty public constructor
     }
 
+    /**
+     * public newInstance, the optimal constructor for this class. Atm it is empty
+     * @return a fully operating FragmentTournamentSelection
+     */
     public static FragmentTournamentSelection newInstance() {
-        FragmentTournamentSelection fragment = new FragmentTournamentSelection();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentTournamentSelection fragment = new FragmentTournamentSelection();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentTournamentSelection();
     }
 
+    /**
+     * onCreate variables are set and the list is synchronized. Also the context is taken in order to avoid
+     * multiple times getActivity()
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_simple_list, container, false);
-        mListTornei = view.findViewById(R.id.list_fragment);
-        setList(mTornei);
+        ctx = getActivity();
+        mTournamentList = view.findViewById(R.id.list_fragment);
+        setList(mTournaments);
         return view;
     }
 
@@ -65,15 +83,19 @@ public class FragmentTournamentSelection extends Fragment {
         mListener = null;
     }
 
-    public void setList(List<Tournament> tornei){
-        mTornei = tornei;
-        if(tornei.size()!=0 && getContext()!=null) {
-            mListTornei.setAdapter(new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1, mTornei.toArray()));
-            mListTornei.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+    /**
+     * updates the UI accordingly to the passed array
+     * @param tournaments
+     */
+    public void setList(List<Tournament> tournaments){
+        mTournaments = tournaments;
+        if(tournaments.size()!=0 && ctx != null) {
+            mTournamentList.setAdapter(new ArrayAdapter(ctx, android.R.layout.simple_list_item_1, mTournaments.toArray()));
+            mTournamentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    Tournament t = (Tournament) mListTornei.getAdapter().getItem(i);
-                    mListener.onFragmentClassificheTorneiInteraction(t.id);
+                    Tournament t = (Tournament) mTournamentList.getAdapter().getItem(i);
+                    mListener.onFragmentTournamentLadderInteraction(t.id);
                 }
             });
         }
@@ -81,6 +103,6 @@ public class FragmentTournamentSelection extends Fragment {
 
 
     public interface OnFragmentInteractionListener {
-        void onFragmentClassificheTorneiInteraction(String id);
+        void onFragmentTournamentLadderInteraction(String id);      //interface for the list item onclick interaction
     }
 }

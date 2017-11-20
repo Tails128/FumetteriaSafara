@@ -1,4 +1,4 @@
-package com.maddapp.fddeveloper.fumetteriasafara.tournament;
+package com.maddapp.fddeveloper.fumetteriasafara.main;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -34,42 +34,60 @@ public class ChampionshipSelectionFragment extends Fragment {
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static DatabaseReference reference = database.getReference();
 
-    private List<Championship> campionati = new ArrayList<>();
-    private ListView mlistview;
+    private List<Championship> championships = new ArrayList<>();
+    private ListView mListView;
 
+    /**
+     * default empty public constructor, please use newInstance instead
+     */
     public ChampionshipSelectionFragment() {
         // Required empty public constructor
     }
 
-    public static ChampionshipSelectionFragment newInstance(String param1) {
+    /**
+     * Function which initializes a new instance of ChampionshipFragment. opposed to the empty
+     * constructor, it sets the passed championshipId
+     * @param championshipId
+     * @return
+     */
+    public static ChampionshipSelectionFragment newInstance(String championshipId) {
 
         ChampionshipSelectionFragment fragment = new ChampionshipSelectionFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM1, championshipId);
         fragment.setArguments(args);
         return fragment;
     }
+
+    /**
+     * onCreate function. It gets the tournament id from the bundle and appends a listener to FireBase
+     * to gather the championships of the last three years. The year restriction is set in order to avoid
+     * downloading too much data.
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
+            //getting id
             id = getArguments().getString(ARG_PARAM1);
             String query = String.format("%s/Campionati",id);
+            //appending listener and populating list
             reference.child(query).limitToLast(3).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
-                    campionati.clear();
-                    for(DataSnapshot Yearsnapshot : dataSnapshot.getChildren()){
-                        for(DataSnapshot snap : Yearsnapshot.getChildren()){
+                    championships.clear();
+                    for(DataSnapshot yearSnapshot : dataSnapshot.getChildren()){
+                        for(DataSnapshot snap : yearSnapshot.getChildren()){
                             Championship c = snap.getValue(Championship.class);
                             if(c!= null) {
                                 c.id = snap.getKey();
-                                campionati.add(c);
+                                championships.add(c);
                             }
                         }
                     }
-                    ArrayAdapter adapter = new ArrayAdapter(getContext(), android.R.layout.simple_list_item_1 , campionati.toArray());
-                    mlistview.setAdapter(adapter);
+                    ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1 , championships.toArray());
+                    mListView.setAdapter(adapter);
                 }
 
                 @Override
@@ -90,8 +108,8 @@ public class ChampionshipSelectionFragment extends Fragment {
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
-        mlistview = view.findViewById(R.id.simple_list);
-        mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mListView = view.findViewById(R.id.simple_list);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Championship c = (Championship) adapterView.getItemAtPosition(i);
@@ -118,6 +136,7 @@ public class ChampionshipSelectionFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void onChampionshipSelection(String id, String gioco);
+        void onChampionshipSelection(String id, String game);   //interface required to forward the selection flow. It must implement the action to take
+                                                                //after the tournament is selected
     }
 }

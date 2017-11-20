@@ -38,30 +38,31 @@ public class BookingFragment extends Fragment {
     private List<Booking> items = new ArrayList<>();
     private static FirebaseDatabase database = FirebaseDatabase.getInstance();
     private static DatabaseReference reference = database.getReference();
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
+     * Please avoid using this and use the {@Link newInstance} function instead.
      */
     public BookingFragment() {
-        final List<Booking> result = new ArrayList<>();
         String query = String.format("Bookings/%s",mAuth.getCurrentUser().getUid());
-        final boolean regularBooking = true;
+        //adding child listener for confirmed bookings
+        final boolean confirmedBooking = true;
         reference.child(query).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(final DataSnapshot dataSnapshot, String s) {
-                childAdded(dataSnapshot, regularBooking);
+                childAdded(dataSnapshot, confirmedBooking);
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                childChanged(dataSnapshot, regularBooking);
+                childChanged(dataSnapshot, confirmedBooking);
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                childRemoved(dataSnapshot.getKey(),regularBooking);
+                childRemoved(dataSnapshot.getKey(),confirmedBooking);
             }
 
             @Override
@@ -73,6 +74,7 @@ public class BookingFragment extends Fragment {
             }
         });
 
+        //adding child listener for NOT confirmed bookings
         final boolean temporaryBooking = false;
         query = String.format("TempBookings/%s",mAuth.getCurrentUser().getUid());
         reference.child(query).addChildEventListener(new ChildEventListener() {
@@ -101,11 +103,15 @@ public class BookingFragment extends Fragment {
         });
     }
 
+    /**
+     * simple new instance constructor. Atm it is not doing additional actions
+     * @return a new working and correctly initialized BookingFragment
+     */
     public static BookingFragment newInstance() {
-        BookingFragment fragment = new BookingFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        BookingFragment fragment = new BookingFragment();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new BookingFragment();
     }
 
     @Override
@@ -113,6 +119,15 @@ public class BookingFragment extends Fragment {
         super.onCreate(savedInstanceState);
     }
 
+    /**
+     * onCreateView method.
+     * This method simply assigns the {@Link mrecyclerview} variable or re-uses it in order to
+     * display the bookings. It also sets the adapter containing the bookings.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -136,7 +151,6 @@ public class BookingFragment extends Fragment {
         return view;
     }
 
-
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -154,6 +168,14 @@ public class BookingFragment extends Fragment {
         mListener = null;
     }
 
+    /**
+     * Decentralized function to handle the childAdded firing from the firebase listeners.
+     * This function was decentralized since the two different paths to retrieve the booking items
+     * return the same item structure. This is done in order to set the firebase rules in such a way
+     * that the user cannot write on the confirmed items.
+     * @param booking
+     * @param confirmed
+     */
     public void childAdded(final DataSnapshot booking, final boolean confirmed){
         DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
         nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -164,7 +186,7 @@ public class BookingFragment extends Fragment {
                 if(b!= null)
                     title = b.getName();
                 items.add(new Booking(booking.getKey(), title, booking.getValue(int.class), confirmed));
-                setList(items);
+                setList();
             }
 
             @Override
@@ -174,17 +196,33 @@ public class BookingFragment extends Fragment {
         });
     }
 
-    public void childChanged(DataSnapshot dataSnapshot, boolean confirmed){
+    /**
+     * Decentralized function to handle the childChanged firing from the firebase listeners.
+     * This function was decentralized since the two different paths to retrieve the booking items
+     * return the same item structure. This is done in order to set the firebase rules in such a way
+     * that the user cannot write on the confirmed items.
+     * @param booking
+     * @param confirmed
+     */
+    public void childChanged(DataSnapshot booking, boolean confirmed){
         for(Booking b : items){
-            if(b.getId().equals(dataSnapshot.getKey()) && b.isConfirmed() == confirmed)
+            if(b.getId().equals(booking.getKey()) && b.isConfirmed() == confirmed)
             {
-                b.setNumber(dataSnapshot.getValue(int.class));
-                setList(items);
+                b.setNumber(booking.getValue(int.class));
+                setList();
                 break;
             }
         }
     }
 
+    /**
+     * Decentralized function to handle the childRemoved firing from the firebase listeners.
+     * This function was decentralized since the two different paths to retrieve the booking items
+     * return the same item structure. This is done in order to set the firebase rules in such a way
+     * that the user cannot write on the confirmed items.
+     * @param key
+     * @param confirmed
+     */
     public void childRemoved(String key, boolean confirmed){
         int i = -1;
         for(Booking b : items){
@@ -193,17 +231,20 @@ public class BookingFragment extends Fragment {
                 break;
         }
         items.remove(i);
-        setList(items);
+        setList();
     }
 
-    public void setList(List<Booking> items){
+    /**
+     * This function needs to be called each time {@Link items} is called.
+     * The function which updates the UI accordingly to the items in the {@Link items} variable
+     */
+    public void setList(){
         if(mrecyclerview!= null)
             mrecyclerview.setAdapter(new BookingRecyclerViewAdapter(items,null));
-        this.items = items;
     }
 
     public interface OnListFragmentInteractionListener {
-        void onAddBooking();
-        void showBooking(String title, int comic_number, boolean confirmed);
+        void onAddBooking();    //interface to handle the request to add a booking
+        void showBooking(String title, int comic_number, boolean confirmed);    //interface to handle the request to show the booking in detail
     }
 }

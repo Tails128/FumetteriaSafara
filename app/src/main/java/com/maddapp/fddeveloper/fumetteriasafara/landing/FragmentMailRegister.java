@@ -35,11 +35,15 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
+/**
+ * A fragment which manages the register via mail.
+ *
+ */
 public class FragmentMailRegister extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_READ_CONTACTS = 1;
 
 
     private OnFragmentInteractionListener mListener;
@@ -49,32 +53,40 @@ public class FragmentMailRegister extends Fragment implements LoaderManager.Load
     private EditText mSurname;
     private Context ctx;
 
+    /**
+     * Empty constructor.
+     * Please use {@Link newInstance} instead.
+     */
     public FragmentMailRegister() {
         // Required empty public constructor
     }
 
+    /**
+     * Empty constructor
+     * @return a new working and correctly initialized FragmentMailRegister
+     */
     public static FragmentMailRegister newInstance() {
-        FragmentMailRegister fragment = new FragmentMailRegister();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentMailRegister fragment = new FragmentMailRegister();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentMailRegister();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mail_register, container, false);
+        //context is taken to avoid calling getActivity() multiple times
         ctx= getActivity();
-
+        //assigns mEmailView to call populateAutoComplete() and then calls it
         mEmailView = view.findViewById(R.id.email);
         populateAutoComplete();
-
+        //assigns additional data fields
         mName = view.findViewById(R.id.name);
         mSurname = view.findViewById(R.id.surname);
-
+        //assigns the password view field
         mPasswordView = view.findViewById(R.id.password);
-
+        //attatches the attemptlogin() function to the last field
         mSurname.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
@@ -85,7 +97,7 @@ public class FragmentMailRegister extends Fragment implements LoaderManager.Load
                 return false;
             }
         });
-
+        //assigns the attemptLogin() function onpresso for the button
         Button mEmailSignInButton = view.findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,7 +126,7 @@ public class FragmentMailRegister extends Fragment implements LoaderManager.Load
     }
 
     public interface OnFragmentInteractionListener {
-        void onForwardRegister(String mail, String password, String Name, String Surname);
+        void onForwardRegister(String mail, String password, String Name, String Surname);  //attempt the login with validated data
     }
 
 
@@ -226,13 +238,7 @@ public class FragmentMailRegister extends Fragment implements LoaderManager.Load
         }
     }
 
-
-
-
-
-
-
-
+    //From here on it's all standard google autocomplete
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {

@@ -25,17 +25,21 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.crash.FirebaseCrash;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.UserManager;
+import com.maddapp.fddeveloper.fumetteriasafara.dialogs.FragmentAddBooking;
 import com.maddapp.fddeveloper.fumetteriasafara.landing.LandingScreenActivity;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.sharedThings.CardsManager;
-import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipSelectionFragment;
-import com.maddapp.fddeveloper.fumetteriasafara.tournament.GameSelectionFragment;
 import com.maddapp.fddeveloper.fumetteriasafara.tournament.ChampionshipActivity;
 
 import java.util.Locale;
 
 /**
- * The main activity of the app: after logging in this activity works as a hub
+ * The main activity of the app: after logging in this activity works as a hub.
+ * this activity is a bottom navigation bar activity with 4 areas:
+ * - Home, which shows the logo and the bonus point recap
+ * - Bookings, which shows all the bookings made by the user and allows the user to book a comic
+ * - Games, which shows the TCG supported by the reseller and allows to check the passed championships dapta
+ * - Settings, which manages some simple settings
  */
 public class MainActivity extends AppCompatActivity implements  GameSelectionFragment.OnFragmentInteractionListener,
                                                                 SettingsFragment.OnFragmentInteractionListener,
@@ -43,32 +47,39 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
                                                                 HomeFragment.OnFragmentInteractionListener,
                                                                 BookingFragment.OnListFragmentInteractionListener {
     private FirebaseAuth mAuth;
-    private FirebaseUser User;
     private GoogleApiClient mGoogleApiClient;
-    private LoginManager mLoginManager;
-    final FragmentManager fm = getSupportFragmentManager();
+    final FragmentManager fragmentManager = getSupportFragmentManager();
     private final HomeFragment homeFragment = HomeFragment.newInstance();
-    private final BookingFragment abbonamentiFragment = BookingFragment.newInstance();
+    private final BookingFragment bookingFragment = BookingFragment.newInstance();
     private final GameSelectionFragment gameSelectionFragment = GameSelectionFragment.newInstance();
     private final SettingsFragment optionFragment = SettingsFragment.newInstance();
     private final FragmentAddBooking fragmentAddBooking = FragmentAddBooking.newInstance();
-    private ChampionshipSelectionFragment championshipFragment;
     private boolean backToGames = false;
+    FirebaseUser User;
+    LoginManager mLoginManager;
+    ChampionshipSelectionFragment championshipFragment;
 
+    /**
+     * default bottom navigation OnNavigationItemSelectedListener, but using a cross fade, according
+     * to Material design principles.
+     * It also sets the boolean backToGames to false. Such boolean is used in the onBackButtonPressed
+     * management, so it needs to be reset every time the fragment changes, to prevent the
+     * onBackButtonPressed to work incorrectly.
+     */
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             backToGames = false;
-            FragmentTransaction f = fm.beginTransaction();
+            FragmentTransaction f = fragmentManager.beginTransaction();
             f.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     f.replace(R.id.content, homeFragment).commit();
                     return true;
                 case R.id.navigation_abbonamenti:
-                    f.replace(R.id.content, abbonamentiFragment).commit();
+                    f.replace(R.id.content, bookingFragment).commit();
                     return true;
                 case R.id.navigation_tornei:
                     f.replace(R.id.content, gameSelectionFragment).commit();
@@ -82,6 +93,10 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
         }
     };
 
+    /**
+     * On Create, it assigns data to the variables and checks if the user's logged
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,11 +133,14 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
 
         if(savedInstanceState == null) {
             UserManager.readUser(mAuth.getCurrentUser(),MainActivity.this);
-            FragmentTransaction f = fm.beginTransaction();
+            FragmentTransaction f = fragmentManager.beginTransaction();
             f.replace(R.id.content, homeFragment).commit();
         }
     }
 
+    /**
+     * onStart simply hides the support action bar after doing the default Activity.onStart()
+     */
     @Override
     protected void onStart(){
         super.onStart();
@@ -131,6 +149,13 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
     }
 
     //Implementing GameSelectionFragment.OnFragmentInteraction
+
+    /**
+     * onFragmentGameInteraction's implementation:
+     * sets the boolean which allows onBackPress to move back from the championship fragment to the
+     * game fragment, then sets the championship fragment in place of the game fragment.
+     * @param destination
+     */
     @Override
     public void onFragmentGameInteraction(String destination) {
         backToGames = true;
@@ -142,37 +167,60 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
         CardsManager.setList(destination);
     }
 
-    //Implementing ChampionshipSelectionFragment.OnFragmentInteraction
+    /**
+     * Implementing the onChampionshipSelection interface function.
+     * Once the championship is selected, it is possible to analyze data, so the Activity needs to
+     * move on to the {@Link ChampionshipActivity} in the tournament package.
+     * @param championshipId
+     * @param game
+     */
     @Override
-    public void onChampionshipSelection(String id, String gioco){
+    public void onChampionshipSelection(String championshipId, String game){
         Intent intent = new Intent(getApplicationContext(), ChampionshipActivity.class);
-        intent.putExtra("id",id);
-        intent.putExtra("gioco", gioco);
+        intent.putExtra("championshipId",championshipId);
+        intent.putExtra("game", game);
         startActivity(intent);
     }
 
+    /**
+     * Implementation of the onFragmentHomeInteraction interface function.
+     * Changes the Activity to a TransactionRecapActivity to present the user with the list of
+     * the instances in which he gained bonus points. Since Tournament bonus points and Transaction
+     * bonus points can never be put together, the a mode parameter is required.
+     * @param mode either "Tornei" or "Transazioni"
+     */
     public void onFragmentHomeInteraction(String mode){
-        TransactionRecapActivity recap = new TransactionRecapActivity();
         Intent intent = new Intent(getApplicationContext(), TransactionRecapActivity.class);
         intent.putExtra("mode",mode);
         startActivity(intent);
     }
-    //Implementing SettingsFragment.OnFragmentInteraction
+
+    /**
+     * The function to logout and dismiss the token.
+     * as the user's logged out, it is mandatory to go back to the landing Activity.
+     */
     public void logout(){
+        //firebase logout
         mAuth.signOut();
+        //google token dispose
         Auth.GoogleSignInApi.signOut(mGoogleApiClient).setResultCallback(new ResultCallback<Status>() {
             @Override
             public void onResult(@NonNull Status status) {
             }
         });
+        //facebook token dispose
         disconnectFromFacebook();
 
+        //moving back to landing activity
         Intent intent = new Intent(getApplicationContext(), LandingScreenActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_TASK_ON_HOME);
         startActivity(intent);
         this.finish();
     }
 
+    /**
+     * a function to dispose of the Facebook auth token
+     */
     private void disconnectFromFacebook() {
         if (AccessToken.getCurrentAccessToken() == null) {
             return; // already logged out
@@ -189,19 +237,35 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
         }).executeAsync();
     }
 
-
-    public  void makeLog(String text){
+    /**
+     * implementing the settingActivity's makeLog interface function.
+     * This function simply checks if the text passed is null or empty and then sends a log to
+     * FireBaseCrash
+     * @param text
+     */
+    public void makeLog(String text){
         if(text == null || text.trim().equals(""))
             return;
         String message = String.format("Message: %s",text);
         FirebaseCrash.report(new Exception(message));
     }
 
+    /**
+     * implementation of the onAddBooking interface Function.
+     * It displays the fragmentAddBooking dialog.
+     */
     @Override
     public void onAddBooking() {
         fragmentAddBooking.show(getSupportFragmentManager(),"addBooking");
     }
 
+    /**
+     * Implementation of the showBooking interface function.
+     * It shows a modal containing the details of the selected booking through the passed arguments
+     * @param title title of comic, it will become the title of the modal
+     * @param comic_number comic's starting number for the booking (e.g. booking comicX from number 1)
+     * @param confirmed a boolean asserting if the shopkeeper confirmed the booking or if it is still pending.
+     */
     @Override
     public void showBooking(String title, int comic_number, boolean confirmed) {
         String text = String.format(Locale.ITALIAN,"numero:\t%d\nstato:\t%s",comic_number, confirmed? "approvato" : "in attesa di approvazione");
@@ -225,6 +289,9 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
 
     }
 
+    /**
+     * onBackPressed is rewritten to manage the championshipFragment
+     */
     @Override
     public void onBackPressed() {
         if(backToGames) {

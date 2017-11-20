@@ -41,8 +41,7 @@ import java.util.List;
  *  - Google login, the most usable one, which connects directly to google accounts
  *  - Facebook login, another usable one, which connects via facebook
  *  - Classic login, which lands to another activity for the classic mail and password login
- *
- *  Using firebase, as long as the mail is the same, multiple login methods are valid
+ *  Using FireBase, as long as the mail is the same, multiple login methods are valid
  */
 public class LandingScreenActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
@@ -178,6 +177,10 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    /**
+     * forwards the google login into  firebase auth
+     * @param result
+     */
     private void handleGoogleSignInResult(GoogleSignInResult result){
         //get result if success, pass it to login
         if(result.isSuccess()){
@@ -186,18 +189,31 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
         }
     }
 
+    /**
+     * extracts the token from the GoogleSignInAcoount
+     * @param acct
+     */
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct){
         //get token, pass it
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
         handleLoginWithCredential(credential);
     }
 
+    /**
+     * extracts the token from the Facebook AccessToken
+     * @param token
+     */
     private void handleFacebookAccessToken(AccessToken token) {
         //get token, pass it
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         handleLoginWithCredential(credential);
     }
 
+
+    /**
+     * uses the accessToken to log in via firebase
+     * @param credential
+     */
     private void handleLoginWithCredential(AuthCredential credential){
         //set login animation, log via token
         LoadingAnimation(true);
@@ -219,6 +235,10 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
                 });
     }
 
+    /**
+     * call it if the user's logged on FireBase, this function starts a new intent containing
+     * the app's logged home intent
+     */
     private void handleLoggedUser(){
         //start new root activity and close this one
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
@@ -227,6 +247,11 @@ public class LandingScreenActivity extends AppCompatActivity implements GoogleAp
         this.finish();
     }
 
+    /**
+     * sets the loading animation while waiting for the web response or disables it if the
+     * login fails.
+     * @param show
+     */
     private void LoadingAnimation(final boolean show){
         //simple loading animation, eventually will be updated with the graphics update.
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);

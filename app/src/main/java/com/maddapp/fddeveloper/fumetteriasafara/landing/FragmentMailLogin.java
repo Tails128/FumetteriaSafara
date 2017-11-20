@@ -35,43 +35,69 @@ import java.util.List;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
+/**
+ * The fragment which manages the login via mail.
+ * The main features is the auto compile. It is a simple login manager which checks if the password is
+ * long enough and the mail has a valid format.
+ * The interfaces are used to return the valid data and to request a register instead of a simple login
+ */
 public class FragmentMailLogin extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
      */
-    private static final int REQUEST_READ_CONTACTS = 0;
+    private static final int REQUEST_READ_CONTACTS = 1;
 
     private OnFragmentInteractionListener mListener;
     private Context ctx;
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
 
+    /**
+     * classic public constructor, no actions are done inside it.
+     * Please use {@Link newInstance} instead
+     */
     public FragmentMailLogin() {
         // Required empty public constructor
     }
 
+    /**
+     * simple new instance constructor. Atm it is not doing additional actions
+     * @return a new working and correctly initialized FragmentMailLogin
+     */
     public static FragmentMailLogin newInstance() {
-        FragmentMailLogin fragment = new FragmentMailLogin();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
+//        FragmentMailLogin fragment = new FragmentMailLogin();
+//        Bundle args = new Bundle();
+//        fragment.setArguments(args);
+        return new FragmentMailLogin();
     }
 
+    /**
+     * onCreate initializer, it simply gets the context to avoid calling getActivity multiple times
+     * @param savedInstanceState
+     */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = getActivity();
     }
 
+    /**
+     * on create view.
+     * Simply sets the onClick listeners and launches the autocomplete.
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_mail_login, container, false);
+        //set the mEmailView for the autocomplete and calls the autocomplete.
         mEmailView = view.findViewById(R.id.email);
         populateAutoComplete();
-
+        //sets the listener for the password view
         mPasswordView = view.findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -83,7 +109,7 @@ public class FragmentMailLogin extends Fragment implements LoaderManager.LoaderC
                 return false;
             }
         });
-
+        //sets the button onclick listener
         Button mEmailSignInButton = view.findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,7 +117,7 @@ public class FragmentMailLogin extends Fragment implements LoaderManager.LoaderC
                 attemptLogin();
             }
         });
-
+        //sets the request for register
         TextView registerText = view.findViewById(R.id.textView2);
         registerText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,9 +147,11 @@ public class FragmentMailLogin extends Fragment implements LoaderManager.LoaderC
     }
 
     public interface OnFragmentInteractionListener {
-        void forwardLogin(String email, String password);
-        void requestMailRegister();
+        void forwardLogin(String email, String password);       //decide what to do with valid data (probably go with the login)
+        void requestMailRegister();                             //require a mail register instead of a login
     }
+
+    // from here on (aside the last function) it's all google default autocomplete
 
     private void populateAutoComplete() {
         if (!mayRequestContacts()) {

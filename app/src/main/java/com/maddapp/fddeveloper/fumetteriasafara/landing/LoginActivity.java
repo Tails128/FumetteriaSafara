@@ -20,8 +20,7 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.UserManager;
 
 /**
- * A login screen that offers login via email/password and also let the user access to a
- * register activity.
+ * An activity which manages via mail login and register.
  */
 public class LoginActivity extends AppCompatActivity implements FragmentMailLogin.OnFragmentInteractionListener, FragmentMailRegister.OnFragmentInteractionListener {
 
@@ -34,35 +33,42 @@ public class LoginActivity extends AppCompatActivity implements FragmentMailLogi
     private View mContentView;
 
     private FirebaseAuth mAuth;
-    private FirebaseUser mUser;
+    FirebaseUser mUser;
     private boolean inRegisterMode = false;
     private FragmentMailLogin fml = FragmentMailLogin.newInstance();
     private FragmentMailRegister sf = FragmentMailRegister.newInstance();
 
+    /**
+     * On create function. It simply stores the data and sets the login fragment
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        //firebase initialization
         mAuth= FirebaseAuth.getInstance();
         mUser = mAuth.getCurrentUser();
+        //if the user's already logged, there's no need to login, so just finish()
         if(mUser != null)
             finish();
 
+        //setting the login fragment and setting the values for the loading animation
         mProgressView = findViewById(R.id.login_progress);
         mContentView = findViewById(R.id.content);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.content, fml)
                 .commit();
 
-
+        //no need for action bar in this activity
         if(getSupportActionBar() != null)
             getSupportActionBar().hide();
 
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * Shows the progress UI and hides the login form or vice versa.
      */
     private void showProgress(final boolean show) {
         int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
@@ -86,23 +92,22 @@ public class LoginActivity extends AppCompatActivity implements FragmentMailLogi
         });
     }
 
-    private void fragmentFadeSwap(final View holder, Fragment in){
-        final int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-
-        holder.animate().setDuration(shortAnimTime).alpha(0);
-//        getSupportFragmentManager().beginTransaction().replace(holder,in);
-    }
-
+    /**
+     * Attempts a login via firebase with mail and password
+     * @param email a valid email
+     * @param password a valid password
+     */
     @Override
     public void forwardLogin(String email, String password) {
+        // enables the loading animation
         showProgress(true);
-
+        //attempts the login
         mAuth.signInWithEmailAndPassword(email,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()){
+                            //in case of success, the activity ends
                             finish();
                         }
                         else{
@@ -121,6 +126,10 @@ public class LoginActivity extends AppCompatActivity implements FragmentMailLogi
         ;
     }
 
+    /**
+     * If the mail register is requested, the activity starts a transaction to the register fragment
+     * (from the login fragment)
+     */
     @Override
     public void requestMailRegister() {
         getSupportFragmentManager().beginTransaction()
@@ -130,6 +139,10 @@ public class LoginActivity extends AppCompatActivity implements FragmentMailLogi
         inRegisterMode = true;
     }
 
+    /**
+     * In case the fragment is set to Register, the backbutton sets a fragment transaction to go back
+     * to the login fragment.
+     */
     @Override
     public void onBackPressed() {
         if(inRegisterMode){
@@ -143,15 +156,23 @@ public class LoginActivity extends AppCompatActivity implements FragmentMailLogi
             super.onBackPressed();
     }
 
+    /**
+     * Forwards the register with valid data, attempting a FireBase registration
+     * @param mail a valid mail
+     * @param password a valid password
+     * @param Name a not empty name
+     * @param Surname a not empty password
+     */
     @Override
     public void onForwardRegister(String mail, String password, final String Name, final String Surname) {
         showProgress(true);
-
+        //creates the new user
         mAuth.createUserWithEmailAndPassword(mail,password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if(task.isSuccessful()) {
+                            //on success finishes the activity
                             FirebaseUser val = mAuth.getCurrentUser();
                             UserManager.writeUser(Name,Surname, mAuth.getCurrentUser());
                             finish();
