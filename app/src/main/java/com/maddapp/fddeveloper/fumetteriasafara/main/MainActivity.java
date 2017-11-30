@@ -299,6 +299,7 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
             t.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
             t.replace(R.id.content, gameSelectionFragment);
             t.commit();
+            backToGames = !backToGames;
         }
             else
         super.onBackPressed();
