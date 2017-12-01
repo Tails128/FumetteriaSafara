@@ -17,7 +17,6 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 public class SettingsFragment extends Fragment {
     private EditText name;
     private EditText surname;
-    private FirebaseAuth mAuth;
     private EditText bugText;
     private OnFragmentInteractionListener mListener;
 
@@ -72,7 +71,7 @@ public class SettingsFragment extends Fragment {
                 else{
                     UserManager.CurrentUserData.Nome = name.getText().toString().trim();
                     UserManager.CurrentUserData.Cognome = surname.getText().toString().trim();
-                    UserManager.writeUser(mAuth.getCurrentUser());
+                    UserManager.writeUser(FirebaseAuth.getInstance().getCurrentUser());
                 }
             }
         });
