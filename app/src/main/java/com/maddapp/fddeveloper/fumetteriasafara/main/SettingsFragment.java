@@ -65,13 +65,14 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if(name.getText().toString().trim().equals(""))
-                    Toast.makeText(getActivity(),"Inserisci un nome!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getActivity().getString(R.string.update_user_error_name),Toast.LENGTH_SHORT).show();
                 else if(name.getText().toString().trim().equals(""))
-                    Toast.makeText(getActivity(),"Inserisci un cognome!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),getActivity().getString(R.string.update_user_error_surname),Toast.LENGTH_SHORT).show();
                 else{
                     UserManager.CurrentUserData.Nome = name.getText().toString().trim();
                     UserManager.CurrentUserData.Cognome = surname.getText().toString().trim();
                     UserManager.writeUser(FirebaseAuth.getInstance().getCurrentUser());
+                    Toast.makeText(getActivity(), getActivity().getString(R.string.update_user_success),Toast.LENGTH_SHORT).show();
                 }
             }
         });

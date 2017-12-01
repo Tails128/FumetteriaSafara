@@ -26,6 +26,8 @@
     <string name="email_hint">e-mail</string>
     <string name="password_hint">password</string>
     <string name="register_link">Non sei ancora registrato? Clicca qui!</string>
+    <string name="mail_register_error_surname">Non hai riempito il campo cognome!</string>
+    <string name="mail_register_error_name">Non hai riempito il campo nome!</string>
 
     <!--TCG-->
     <string name="Magic">Magic</string>
@@ -45,8 +47,9 @@
     <string name="logout_button">Logout</string>
     <string name="segnala_bug_hint">Segnala un problema</string>
     <string name="action_settings">Settings</string>
-    <string name="mail_register_error_surname">Non hai riempito il campo cognome!</string>
-    <string name="mail_register_error_name">Non hai riempito il campo nome!</string>
+    <string name="update_user_error_surname">Non hai riempito il campo cognome!</string>
+    <string name="update_user_error_name">Non hai riempito il campo nome!</string>
+    <string name="update_user_success">Nome aggiornato con successo!</string>
 
     <!--Signin -->
     <string name="title_activity_classic_login">Sign in</string>
