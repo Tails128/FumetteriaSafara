@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
@@ -256,6 +257,9 @@ public class MainActivity extends AppCompatActivity implements  GameSelectionFra
      */
     @Override
     public void onAddBooking() {
+        Fragment f = getSupportFragmentManager().findFragmentByTag("addBooking");
+        if(f != null)
+            getSupportFragmentManager().beginTransaction().remove(f).commit();
         fragmentAddBooking.show(getSupportFragmentManager(),"addBooking");
     }
 
