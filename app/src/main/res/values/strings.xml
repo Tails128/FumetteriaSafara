@@ -73,10 +73,10 @@
     <string name="safara_logo_description">Safara\'s logo</string>
 
     <!--HomeFragment-->
-    <string name="punti_madda">Punti accumulati:</string>
-    <string name="punti_torneo">Bonus torneo accumulato:</string>
-    <string name="punti_madda_dummy">Punti accumulati: 0.00 €</string>
-    <string name="punti_torneo_dummy">Bonus torneo accumulato: 0.00 €</string>
+    <string name="punti_madda">Bonus fumetto accumulato:</string>
+    <string name="punti_torneo">Bonus negozio accumulato:</string>
+    <string name="punti_madda_dummy">Bonus fumetto accumulato: 0.00 €</string>
+    <string name="punti_torneo_dummy">Bonus negozio accumulato: 0.00 €</string>
     <string name="transaction_icon_description">An icon to show if the transaction was positive or negative</string>
 
     <!--BookingFragment-->
