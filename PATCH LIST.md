@@ -4,6 +4,13 @@
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 df
 
+##2.3 Endless Beta
+- Bugfix for a bug which prevented the back button to close the app with the following flow: login -> game selection -> championship selection -> back -> back
+- Bugfix for the name update
+- Name update now displays a success message
+- Added support (READ ONLY) for the custom temporary bookings
+- labels update
+
 ### 2.2 Endless Beta
 - Forced facebook logout
 - Solved a bug concerning the title of booking recaps
