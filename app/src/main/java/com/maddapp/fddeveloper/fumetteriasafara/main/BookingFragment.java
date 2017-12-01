@@ -21,6 +21,7 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.adapters.BookingRecyclerViewAdapter;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.Booking;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.Book;
+import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.TemporaryBooking;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,23 +178,30 @@ public class BookingFragment extends Fragment {
      * @param confirmed
      */
     public void childAdded(final DataSnapshot booking, final boolean confirmed){
-        DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
-        nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Book b = dataSnapshot.getValue(Book.class);
-                String title = "";
-                if(b!= null)
-                    title = b.getName();
-                items.add(new Booking(booking.getKey(), title, booking.getValue(int.class), confirmed));
-                setList();
-            }
+        if(booking.getKey().startsWith("TEMPBOOKING")){
+            TemporaryBooking tb = booking.getValue(TemporaryBooking.class);
+            items.add(new Booking(booking.getKey(), tb.Nome, tb.Numero, confirmed));
+            setList();
+        }
+        else {
+            DatabaseReference nameFinder = database.getReference("Books/" + booking.getKey());
+            nameFinder.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Book b = dataSnapshot.getValue(Book.class);
+                    String title = "";
+                    if (b != null)
+                        title = b.getName();
+                    items.add(new Booking(booking.getKey(), title, booking.getValue(int.class), confirmed));
+                    setList();
+                }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-            }
-        });
+                }
+            });
+        }
     }
 
     /**
@@ -205,12 +213,24 @@ public class BookingFragment extends Fragment {
      * @param confirmed
      */
     public void childChanged(DataSnapshot booking, boolean confirmed){
-        for(Booking b : items){
-            if(b.getId().equals(booking.getKey()) && b.isConfirmed() == confirmed)
-            {
-                b.setNumber(booking.getValue(int.class));
-                setList();
-                break;
+        if(booking.getKey().startsWith("TEMPBOOKING")) {
+            for(Booking b : items) {
+                if (b.getId().equals(booking.getKey()) && b.isConfirmed() == confirmed) {
+                    TemporaryBooking tb = booking.getValue(TemporaryBooking.class);
+                    b.setComicName(tb.Nome);
+                    b.setNumber(tb.Numero);
+                    setList();
+                    break;
+                }
+            }
+        }
+        else {
+            for(Booking b : items) {
+                if (b.getId().equals(booking.getKey()) && b.isConfirmed() == confirmed) {
+                    b.setNumber(booking.getValue(int.class));
+                    setList();
+                    break;
+                }
             }
         }
     }
