@@ -21,7 +21,7 @@ public class SettingsFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     /**
-     * empty public constructor. Please avoid using this and use {@Link newInstance} instead
+     * empty public constructor. Please avoid using this and use {@Link #newInstance() newInstance} instead
      */
     public SettingsFragment() {
                 // Required empty public constructor
@@ -48,8 +48,6 @@ public class SettingsFragment extends Fragment {
     /**
      * onViewCreated simply sets the onClick listeners for the name update, the request to update
      * name and surname and for the logout button
-     * @param view
-     * @param savedInstanceState
      */
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState){
@@ -89,7 +87,7 @@ public class SettingsFragment extends Fragment {
             public void onClick(View view) {
                 mListener.makeLog(bugText.getText().toString());
                 bugText.setText("");
-                Toast.makeText(getContext(),"Errore inviato. Grazie!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), getActivity().getString(R.string.err_report_success), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -112,7 +110,7 @@ public class SettingsFragment extends Fragment {
     }
 
     public interface OnFragmentInteractionListener {
-        void logout();              //an iterface for the logout is required
+        void logout();              //an interface for the logout is required
         void makeLog(String text);  //an interface to log errors which the users want to signal
     }
 
