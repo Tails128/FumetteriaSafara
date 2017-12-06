@@ -124,8 +124,10 @@ public class ChampionshipActivity extends AppCompatActivity implements FragmentF
                         tournaments.put(torneo.getKey(), t);
                         for(String key : t.Piazzamenti.keySet()){
                             TournamentPosition pt = t.Piazzamenti.get(key);                //create a championship ladder
-                            if(positions.containsKey(key))
+                            if(positions.containsKey(key)) {
                                 positions.get(key).addPosizione(pt);
+                                tournaments.get(torneo.getKey()).Piazzamenti.get(key).Nome = positions.get(key).Nome;
+                            }
                             else {
                                 String Nome = key;
                                 if (CardsManager.containsKey(game,key))
