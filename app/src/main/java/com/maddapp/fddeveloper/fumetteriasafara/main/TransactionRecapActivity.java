@@ -22,6 +22,8 @@ import com.maddapp.fddeveloper.fumetteriasafara.R;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -114,6 +116,16 @@ public class TransactionRecapActivity extends AppCompatActivity implements Trans
      * the function which needs to be called every time {@Link items} is updated
      */
     public void setList(){
+        Collections.sort(items, new Comparator<TransactionView>() {
+            @Override
+            public int compare(TransactionView transactionView, TransactionView t1) {
+                if(transactionView.Data > t1.Data)
+                    return -1;
+                if(transactionView.Data < t1.Data)
+                    return 1;
+                return 0;
+            }
+        });
         mrecyclerView.setAdapter(new TransactionRecyclerViewAdapter(items, this));
     }
 
