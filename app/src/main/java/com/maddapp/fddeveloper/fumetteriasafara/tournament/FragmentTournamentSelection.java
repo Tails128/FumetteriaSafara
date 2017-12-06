@@ -15,6 +15,8 @@ import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -89,6 +91,17 @@ public class FragmentTournamentSelection extends Fragment {
      */
     public void setList(List<Tournament> tournaments){
         mTournaments = tournaments;
+
+        Collections.sort(mTournaments, new Comparator<Tournament>() {
+            @Override
+            public int compare(Tournament tournament, Tournament t1) {
+                if(tournament.DataTorneo < t1.DataTorneo)
+                    return -1;
+                if(tournament.DataTorneo > t1.DataTorneo)
+                    return 1;
+                return 0;
+            }
+        });
         if(tournaments.size()!=0 && ctx != null) {
             mTournamentList.setAdapter(new ArrayAdapter(ctx, android.R.layout.simple_list_item_1, mTournaments.toArray()));
             mTournamentList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
