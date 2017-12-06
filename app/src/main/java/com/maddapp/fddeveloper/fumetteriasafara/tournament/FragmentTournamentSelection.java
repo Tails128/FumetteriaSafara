@@ -96,9 +96,9 @@ public class FragmentTournamentSelection extends Fragment {
             @Override
             public int compare(Tournament tournament, Tournament t1) {
                 if(tournament.DataTorneo < t1.DataTorneo)
-                    return -1;
-                if(tournament.DataTorneo > t1.DataTorneo)
                     return 1;
+                if(tournament.DataTorneo > t1.DataTorneo)
+                    return -1;
                 return 0;
             }
         });
