@@ -4,6 +4,12 @@
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 df
 
+##2.4 Endless Beta
+- Solved a bug concerning name repetition on tournaments
+- Sorted Formats by name
+- Sorted Transactions by reverse date (LIFO)
+- Sorted Tournaments by reverse date (LIFO)
+
 ##2.3 Endless Beta
 - Bugfix for a bug which prevented the back button to close the app with the following flow: login -> game selection -> championship selection -> back -> back
 - Bugfix for the name update
