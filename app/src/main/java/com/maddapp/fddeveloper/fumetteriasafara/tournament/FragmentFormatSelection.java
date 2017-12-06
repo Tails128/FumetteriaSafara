@@ -13,6 +13,8 @@ import android.widget.ListView;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -81,6 +83,7 @@ public class FragmentFormatSelection extends Fragment {
      * The function which updates the list in the UI. needs to be called everytime the list is updated.
      */
     public void setList(){
+        Collections.sort(mFormats);
         if(mFormats.size()!=0 &&getContext()!= null) {
             mListFormats.setAdapter(new ArrayAdapter<>(getContext() , android.R.layout.simple_list_item_1, mFormats.toArray()));
             mListFormats.setOnItemClickListener(new AdapterView.OnItemClickListener() {
