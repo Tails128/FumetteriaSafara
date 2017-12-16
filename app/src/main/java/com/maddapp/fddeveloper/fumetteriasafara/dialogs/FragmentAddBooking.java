@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -26,10 +29,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.maddapp.fddeveloper.fumetteriasafara.R;
 import com.maddapp.fddeveloper.fumetteriasafara.adapters.SimpleSpinnerItem;
 import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.Book;
+import com.maddapp.fddeveloper.fumetteriasafara.databaseInteractions.dbEntities.TemporaryBooking;
 
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public class FragmentAddBooking extends DialogFragment {
 
@@ -38,6 +43,8 @@ public class FragmentAddBooking extends DialogFragment {
     private Map<String, Book> books = new HashMap<>();
     private Spinner mSpinner;
     private EditText startingNumber;
+    private EditText altBookName;
+    private CheckBox newBookBox;
     Context ctx;
 
     /**
@@ -139,6 +146,22 @@ public class FragmentAddBooking extends DialogFragment {
         mSpinner = view.findViewById(R.id.spinner);
         setSpinner();
         startingNumber = view.findViewById(R.id.starting_number);
+        altBookName = view.findViewById(R.id.newBookName);
+        newBookBox = view.findViewById(R.id.notInListBox);
+        newBookBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(b){
+                    altBookName.setVisibility(View.VISIBLE);
+                    mSpinner.setVisibility(View.GONE);
+                }
+                else
+                {
+                    altBookName.setVisibility(View.GONE);
+                    mSpinner.setVisibility(View.VISIBLE);
+                }
+            }
+        });
         builder.setTitle(R.string.book_modal_title);                    //Dialog title
         builder.setView(view);                                          //Dialog content
         //Dialog actions
@@ -157,34 +180,71 @@ public class FragmentAddBooking extends DialogFragment {
                 dialog.getButton(DialogInterface.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //checking the spinner
-                        String id = ((SimpleSpinnerItem)mSpinner.getSelectedItem()).id;
-                        if(id == null || id.equals("")){
-                            Toast.makeText(ctx, ctx.getText(R.string.error_comic_spinner), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        //then we check if a comic number is selected (0 is available in case there are "number 0 books"
-                        int comicNumber;
-                        try{
-                            comicNumber =Integer.parseInt(startingNumber.getText().toString());
-                            if(comicNumber < 0) {
-                                Toast.makeText( ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
+                        if (newBookBox.isChecked()) {
+                            //if the book is not in list (therefore new) we must add a new one
+
+                            //getting book name
+                            String bookName = altBookName.getText().toString().trim();
+                            if (bookName.equals("")) {
+                                Toast.makeText(ctx, ctx.getText(R.string.error_comic_name_empty), Toast.LENGTH_SHORT).show();
                                 return;
                             }
-                        }
-                        catch(Exception e){
-                            Toast.makeText( ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
-                            return;
-                        }
-                        //finally we put in the user's temporary bookings the key-value pair corresponding to the booking he selected
-                        String query = String.format(Locale.ITALIAN,"TempBookings/%s/%s", FirebaseAuth.getInstance().getUid(), id);
-                        reference.child(query).setValue(comicNumber).addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                Toast.makeText(ctx, ctx.getString(R.string.success_comic_booking), Toast.LENGTH_SHORT).show();
-                                dismiss();
+
+                            //setting the first letter as uppercase
+                            bookName = bookName.substring(0, 1).toUpperCase() + bookName.substring(1);
+
+                            //checking if the name appears in the list
+                            for (Book b : books.values()) {
+                                if (b.getName().toLowerCase().equals(bookName.toLowerCase())) {
+                                    Toast.makeText(ctx, ctx.getText(R.string.error_new_book_already_exists), Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
                             }
-                        });
+                            //getting book id
+                            int comicNumber = getComicNumber();
+                            if(comicNumber == -1){
+                                Toast.makeText(ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
+                            // inserting temporary booking
+                            String id = "TEMPBOOKING" + UUID.randomUUID().toString();
+                            String query = String.format(Locale.ITALIAN, "TempBookings/%s/%s", FirebaseAuth.getInstance().getUid(), id);
+                            TemporaryBooking newTemporaryBooking = new TemporaryBooking();
+                            newTemporaryBooking.Nome = bookName;
+                            newTemporaryBooking.Numero = comicNumber;
+                            reference.child(query).setValue(newTemporaryBooking).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(ctx, ctx.getString(R.string.success_comic_booking), Toast.LENGTH_SHORT).show();
+                                    dismiss();
+                                }
+                            });
+
+
+                        } else {
+                            //getting book id
+                            String id = ((SimpleSpinnerItem) mSpinner.getSelectedItem()).id;
+                            if (id == null || id.equals("")) {
+                                Toast.makeText(ctx, ctx.getText(R.string.error_comic_spinner), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //getting book N°"
+                            int comicNumber = getComicNumber();
+                            if(comicNumber == -1){
+                                Toast.makeText(ctx, ctx.getText(R.string.error_comic_number), Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                            //putting in the user's temporary bookings the key-value pair corresponding to the booking he selected
+                            String query = String.format(Locale.ITALIAN, "TempBookings/%s/%s", FirebaseAuth.getInstance().getUid(), id);
+                            reference.child(query).setValue(comicNumber).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    Toast.makeText(ctx, ctx.getString(R.string.success_comic_booking), Toast.LENGTH_SHORT).show();
+                                    dismiss();
+                                }
+                            });
+                        }
                     }
                 });
                 //finally we color the flat buttons according to the theme
@@ -193,5 +253,21 @@ public class FragmentAddBooking extends DialogFragment {
             }
         });
         return dialog;
+    }
+
+    /**
+     * attempts to get the comic book number
+     * @return -1 if the comic book number is invalid, 0+ if the comic book is valid
+     */
+    private int getComicNumber(){
+        int comicNumber = -1;
+        try {
+            comicNumber = Integer.parseInt(startingNumber.getText().toString());
+            if (comicNumber < 0) {
+                comicNumber = -1;
+            }
+        } catch (Exception e) {
+        }
+        return comicNumber;
     }
 }

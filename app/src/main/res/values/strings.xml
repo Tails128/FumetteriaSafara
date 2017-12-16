@@ -92,6 +92,10 @@
     <string name="error_comic_no_available_comic">Nessun titolo trovato.</string>
     <string name="success_comic_booking">Richiesta di abbonamento inviata con successo!</string>
     <string name="booking_icon_description">a sign to show if the booking is accepted or pending</string>
+    <string name="series_not_in_list">La serie non è in lista</string>
+    <string name="add_series_name">Inserisci il nome della serie</string>
+    <string name="error_comic_name_empty">Non hai inserito nessun nome!</string>
+    <string name="error_new_book_already_exists">La serie esiste già. Per favore sceglila dal menù a tendina.</string>
 
     <!--Tournament errors-->
     <string name="error_no_tournament_data_ita">Non sono stati passati dati relativi al gioco o al campionato</string>
