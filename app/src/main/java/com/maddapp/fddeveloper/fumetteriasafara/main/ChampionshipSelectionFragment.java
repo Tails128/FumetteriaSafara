@@ -51,7 +51,6 @@ public class ChampionshipSelectionFragment extends Fragment {
      * @return
      */
     public static ChampionshipSelectionFragment newInstance(String championshipId) {
-
         ChampionshipSelectionFragment fragment = new ChampionshipSelectionFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, championshipId);
@@ -86,7 +85,7 @@ public class ChampionshipSelectionFragment extends Fragment {
                             }
                         }
                     }
-                    ArrayAdapter adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1 , championships.toArray());
+                    ArrayAdapter adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_list_item_1 , championships.toArray());
                     mListView.setAdapter(adapter);
                 }
 
@@ -96,7 +95,7 @@ public class ChampionshipSelectionFragment extends Fragment {
             });
         }
         else
-            throw new UnsupportedOperationException(getContext().toString() + "No game was selected");
+            throw new UnsupportedOperationException(getActivity().toString() + "No game was selected");
     }
 
     @Override

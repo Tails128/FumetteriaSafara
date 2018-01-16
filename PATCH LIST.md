@@ -4,6 +4,9 @@
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 df
 
+##2.6 Endless Beta
+- Bugfix on a getContext()
+
 ##2.5 Endless Beta
 - Added the possibility to book a not yet existing book
 

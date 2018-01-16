@@ -7,8 +7,8 @@ android {
         applicationId "com.maddapp.fddeveloper.fumetteriasafara"
         minSdkVersion 21
         targetSdkVersion 26
-        versionCode 16
-        versionName "2.5 Endless Beta"
+        versionCode 17
+        versionName "2.6 Endless Beta"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
