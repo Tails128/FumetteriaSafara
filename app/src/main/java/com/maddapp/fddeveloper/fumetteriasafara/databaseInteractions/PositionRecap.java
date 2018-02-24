@@ -66,11 +66,16 @@ public class PositionRecap implements Comparable<PositionRecap>{
             }
         });
         int prevPoints = 0;
+        int accumulator = 0;
         int posizione = 0;
         for (int i = 0; i< arrayToOrder.size(); i++){
             if(prevPoints != arrayToOrder.get(i).Punteggio) {
-                posizione++;
+                posizione += accumulator + 1;
+                accumulator = 0;
                 prevPoints = arrayToOrder.get(i).Punteggio;
+            }
+            else{
+                accumulator ++;
             }
             arrayToOrder.get(i).Posizione = posizione;
         }
