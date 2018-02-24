@@ -4,6 +4,10 @@
 > In order to joke around this fact, the version name after the 1.0 are named "X.Y Endless Beta"
 df
 
+##2.7 Endless Beta
+- Forced the black text color to prevent custom themes from overriding default text color
+- Added position number for 4th + placement to improve readability
+
 ##2.6 Endless Beta
 - Bugfix on a getContext()
 
