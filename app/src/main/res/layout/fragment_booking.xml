@@ -20,6 +20,7 @@
         android:layout_margin="@dimen/text_margin"
         android:textAppearance="?attr/textAppearanceListItem"
         android:text="@string/dummy"
+        android:textColor="@color/black"
         android:paddingStart="16dp"
         android:paddingEnd="16dp"/>
 </LinearLayout>
