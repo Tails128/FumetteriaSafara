@@ -13,7 +13,19 @@
         android:layout_gravity="center"
         android:layout_weight="1"
         app:srcCompat="@drawable/ic_trophy_black_24dp"
-    />
+        />
+
+    <TextView
+        android:id="@+id/TextPosizione"
+        android:layout_width="0dp"
+        android:layout_height="24dp"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:textSize="20sp"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/black"
+        android:visibility="gone"
+        />
 
     <TextView
         android:id="@+id/points"

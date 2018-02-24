@@ -63,9 +63,13 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
             case 3:
                 holder.mImage.setColorFilter(ContextCompat.getColor(mContext, R.color.bronze));
                 break;
-            default:
-                holder.mImage.setColorFilter(ContextCompat.getColor(mContext, android.R.color.white));
+            default:{
+                holder.mImage.setVisibility(View.GONE);
+                holder.mText.setVisibility(View.VISIBLE);
+                String text = holder.mItem.Posizione + mContext.getString(R.string.italian_positioning_suffix);
+                holder.mText.setText(text);
                 break;
+            }
         }
 
         //setting onClick
@@ -92,6 +96,7 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
         final View mView;
         final TextView mContentView;
         final ImageView mImage;
+        final TextView mText;
         PositionRecap mItem;
         final TextView mPoints;
 
@@ -100,6 +105,7 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
             mView = view;
             mContentView = view.findViewById(R.id.content);
             mImage = view.findViewById(R.id.ImagePosizione);
+            mText = view.findViewById(R.id.TextPosizione);
             mPoints = view.findViewById(R.id.points);
         }
 

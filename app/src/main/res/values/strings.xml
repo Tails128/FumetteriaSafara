@@ -108,5 +108,6 @@
     <string name="Chiudi">Chiudi</string>
     <string name="dummy">dummy</string>
     <string name="err_report_success">Errore inviato. Grazie!</string>
+    <string name="italian_positioning_suffix">° -</string>
 
 </resources>
