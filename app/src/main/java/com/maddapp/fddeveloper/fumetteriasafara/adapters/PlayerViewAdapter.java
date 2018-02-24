@@ -55,21 +55,26 @@ public class PlayerViewAdapter extends RecyclerView.Adapter<PlayerViewAdapter.Vi
         Context mContext = holder.mImage.getContext();
         switch (holder.mItem.Posizione){
             case 1:
+                holder.mImage.setVisibility(View.VISIBLE);
+                holder.mText.setVisibility(View.GONE);
                 holder.mImage.setColorFilter(ContextCompat.getColor(mContext, R.color.gold));
                 break;
             case 2:
+                holder.mImage.setVisibility(View.VISIBLE);
+                holder.mText.setVisibility(View.GONE);
                 holder.mImage.setColorFilter(ContextCompat.getColor(mContext, R.color.silver));
                 break;
             case 3:
+                holder.mImage.setVisibility(View.VISIBLE);
+                holder.mText.setVisibility(View.GONE);
                 holder.mImage.setColorFilter(ContextCompat.getColor(mContext, R.color.bronze));
                 break;
-            default:{
+            default:
                 holder.mImage.setVisibility(View.GONE);
                 holder.mText.setVisibility(View.VISIBLE);
                 String text = holder.mItem.Posizione + mContext.getString(R.string.italian_positioning_suffix);
                 holder.mText.setText(text);
                 break;
-            }
         }
 
         //setting onClick
